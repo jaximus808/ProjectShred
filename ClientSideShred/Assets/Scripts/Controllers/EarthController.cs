@@ -20,6 +20,7 @@ public class EarthController : MonoBehaviour
             Input.GetKey(KeyCode.D),
             Input.GetKey(KeyCode.Space),
             Input.GetKey(KeyCode.Mouse0),
+            Input.GetKey(KeyCode.Q),
         };
 
         ClientSend.PlayerMovement(_inputs);

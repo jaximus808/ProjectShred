@@ -211,6 +211,28 @@ public class Client
         }
     }
 
+    public void SendOrginalPlayers()
+    {
+        foreach (Client _client in Server.clients.Values)
+        {
+            if (_client.player != null)
+            {
+                if (_client.id != id)
+                {
+                    ServerSend.SpawnPlayer(id, _client.player);
+                }
+            }
+        }
+        Debug.Log("WillShoot");
+        foreach (NormalEarthAttack _curNormAtk in NetworkManager.NormalEarthAttacks.Values)
+        {
+            Debug.Log("FUCK");
+            ServerSend.ShootEarthNorm(_curNormAtk.id, _curNormAtk.transform.position, _curNormAtk.transform.rotation, true, id);
+        }
+
+        Debug.Log("Shoot");
+    }
+
     /// <summary>Sends the client into the game and informs other clients of the new player.</summary>
     /// <param name="_playerName">The username of the new player.</param>
     public void SendIntoGame(string _playerName, int _classId)
@@ -226,16 +248,7 @@ public class Client
         player.StartDataToClass(id, _playerName);
 
         // Send all players to the new player
-        foreach (Client _client in Server.clients.Values)
-        {
-            if (_client.player != null)
-            {
-                if (_client.id != id)
-                {
-                    ServerSend.SpawnPlayer(id, _client.player);
-                }
-            }
-        }
+        
 
         // Send the new player to all players (including himself)
         foreach (Client _client in Server.clients.Values)

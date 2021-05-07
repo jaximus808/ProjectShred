@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ServerSend
@@ -82,7 +83,13 @@ public class ServerSend
         {
             _packet.Write(_msg);
             _packet.Write(_toClient);
-
+            //_packet.Write(NetworkManager.NormalEarthAttacks.ToArray().Length);
+            //foreach(KeyValuePair<int, NormalEarthAttack> normEarthAttack in NetworkManager.NormalEarthAttacks)
+            //{
+            //    _packet.Write(normEarthAttack.Key);
+            //    _packet.Write(normEarthAttack.Value.transform.position);
+            //    _packet.Write(normEarthAttack.Value.transform.rotation);
+            //}
             SendTCPData(_toClient, _packet);
         }
     }
@@ -130,15 +137,21 @@ public class ServerSend
         }
     }
 
-    public static void ShootEarthNorm(int _id, Vector3 _position, Quaternion _rotation)
+    public static void ShootEarthNorm(int _id, Vector3 _position, Quaternion _rotation, bool _setUp, int _clientId)
     {
         using (Packet _packet = new Packet((int)ServerPackets.earthNormCreate))
         {
             _packet.Write(_id);
             _packet.Write(_position);
             _packet.Write(_rotation);
-
-            SendUDPDataToAll(_packet);
+            if(!_setUp)
+            {
+                SendUDPDataToAll(_packet);
+            }
+            else
+            {
+                SendUDPData(_clientId, _packet);
+            }
         }
     }
 

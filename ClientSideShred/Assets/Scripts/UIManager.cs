@@ -32,7 +32,10 @@ public class UIManager : MonoBehaviour
         usernameField.interactable = false;
         
         Client.instance.ConnectToServer();
+        //Debug.Log("FUKC");
         
+        //Debug.Log("FUKC2");
+
     }
     public void ClassSelectionShow()
     {

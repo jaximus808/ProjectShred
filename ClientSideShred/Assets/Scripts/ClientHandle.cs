@@ -16,6 +16,7 @@ public class ClientHandle : MonoBehaviour
         UIManager.instance.ClassSelectionShow();
         // Now that we have the client's id, connect UDP
         Client.instance.udp.Connect(((IPEndPoint)Client.instance.tcp.socket.Client.LocalEndPoint).Port);
+        ClientSend.ConnectionMade();
     }
 
     public static void SpawnPlayer(Packet _packet)
@@ -34,6 +35,7 @@ public class ClientHandle : MonoBehaviour
         int _id = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
 
+        if (!GameManager.players.ContainsKey(_id)) return;
         GameManager.players[_id].transform.position = _position;
     }
 
@@ -41,7 +43,7 @@ public class ClientHandle : MonoBehaviour
     {
         int _id = _packet.ReadInt();
         Quaternion _rotation = _packet.ReadQuaternion();
-
+        if (!GameManager.players.ContainsKey(_id)) return;
         GameManager.players[_id].transform.rotation = _rotation;
     }
 
@@ -58,6 +60,7 @@ public class ClientHandle : MonoBehaviour
         int _id = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
         Quaternion _rotation = _packet.ReadQuaternion();
+        if (!GameManager.earthNormalAttacks.ContainsKey(_id)) return;
         GameManager.earthNormalAttacks[_id].transform.position = _position;
         GameManager.earthNormalAttacks[_id].transform.rotation = _rotation;
     }

@@ -6,6 +6,8 @@ public class NetworkManager : MonoBehaviour
 {
     public static NetworkManager instance;
 
+    public static Dictionary<int, NormalEarthAttack> NormalEarthAttacks = new Dictionary<int, NormalEarthAttack>();
+
     public GameObject playerPrefab;
     public GameObject playerEarthPrefab;
 

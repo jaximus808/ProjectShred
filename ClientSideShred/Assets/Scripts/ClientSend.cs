@@ -21,6 +21,16 @@ public class ClientSend : MonoBehaviour
     }
 
     #region Packets
+    public static void ConnectionMade()
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.initRender) )
+        {
+            _packet.Write(Client.instance.myId);
+            Debug.Log("wtf");
+            SendTCPData(_packet);
+        }
+    }
+
     /// <summary>Lets the server know that the welcome message was received.</summary>
     public static void WelcomeReceived(int _classId)
     {

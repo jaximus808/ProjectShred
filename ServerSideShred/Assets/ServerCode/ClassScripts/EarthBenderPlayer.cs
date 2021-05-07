@@ -11,8 +11,10 @@ public class EarthBenderPlayer : MonoBehaviour
     public float moveSpeed = 5f;
     public float jumpSpeed = 5f;
     public float setTimerNorm = 0f;
+    public float setTimerQ;
+    public float setTimerQAdd;
 
-    public static Dictionary<int, NormalEarthAttack> NormalEarthAttacks = new Dictionary<int, NormalEarthAttack>();
+    
 
     [SerializeField] private CharacterController controller;
     [SerializeField] private GameObject NormalAttackGameOb;
@@ -23,14 +25,19 @@ public class EarthBenderPlayer : MonoBehaviour
     private float velocity;
     private Player player;
     private bool canNormalAtk;
-
+    private bool canQ;
+    private bool inQProc = false;
     
     private float timerNorm = 0f;
+    private float timerQ = 0f;
+    private float timerQAdd = 0f;
 
+    private int QTotalAdd = 0;
 
     private void Start()
     {
         timerNorm = setTimerNorm;
+        timerQ = setTimerQ;
         canNormalAtk = true;
         gravity *= Time.fixedDeltaTime * Time.fixedDeltaTime;
         moveSpeed *= Time.fixedDeltaTime;
@@ -42,7 +49,7 @@ public class EarthBenderPlayer : MonoBehaviour
         //id = _id;
         //username = _username;
         player = _player;
-        inputs = new bool[6];
+        inputs = new bool[7];
     }
 
     /// <summary>Processes player input and moves the player.</summary>
@@ -86,24 +93,60 @@ public class EarthBenderPlayer : MonoBehaviour
                 canNormalAtk = true;
             }
         }
+        if (canQ && inputs[6])
+        {
+            //canQ = false;
+
+            //ShootNormalAttack();
+            //shoot soemthing
+            inQProc = true;
+            if (timerQAdd <= 0)
+            {
+                QTotalAdd++;
+                //send to client of it adding or smth idk
+                Debug.Log("QADDED");
+                timerQAdd = setTimerQAdd;
+            }
+            else
+            {
+                timerQAdd--;
+            }
+            
+        }
+        else if(canQ && inQProc)
+        {
+            canQ = false;
+            Debug.Log($"Shot {QTotalAdd} spikes");
+            QTotalAdd = 0;
+        }
+        else if (!canQ)
+        {
+            timerQ -= Time.fixedDeltaTime;
+            if (timerQ <= 0)
+            {
+                timerQ = setTimerQ;
+                canQ = true;
+            }
+        }
     }
 
     private void ShootNormalAttack()
     {
         NormalEarthAttack currentEarthAttack= Instantiate(NormalAttackGameOb, NormalAttackSpawn.position, transform.rotation).GetComponent<NormalEarthAttack>();
         currentEarthAttack.GetComponent<Rigidbody>().AddForce(currentEarthAttack.transform.forward * 50,ForceMode.Impulse);
-        int[] _keyArrayEarth = NormalEarthAttacks.Keys.ToArray();
+        int[] _keyArrayEarth = NetworkManager.NormalEarthAttacks.Keys.ToArray();
         if (_keyArrayEarth.Length == 0)
         {
             currentEarthAttack.id = 0;
-            NormalEarthAttacks.Add(0, currentEarthAttack);
-            ServerSend.ShootEarthNorm(0, NormalAttackSpawn.position, transform.rotation);
+            NetworkManager.NormalEarthAttacks.Add(0, currentEarthAttack);
+            ServerSend.ShootEarthNorm(0, NormalAttackSpawn.position, transform.rotation, false, 0);
             return;
         }
         int _atkId = _keyArrayEarth[_keyArrayEarth.Length - 1] + 1;
         currentEarthAttack.id = _atkId;
-        NormalEarthAttacks.Add(_atkId, currentEarthAttack);
-        ServerSend.ShootEarthNorm(_atkId, NormalAttackSpawn.position, transform.rotation);
+        NetworkManager.NormalEarthAttacks.Add(_atkId, currentEarthAttack);
+        Debug.Log($"Bruh: {NetworkManager.NormalEarthAttacks[_atkId].id}");
+        ServerSend.ShootEarthNorm(_atkId, NormalAttackSpawn.position, transform.rotation, false, 0);
     }
 
     /// <summary>Calculates the player's desired movement direction and moves him.</summary>
