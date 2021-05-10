@@ -13,7 +13,9 @@ public enum ServerPackets
     playerRotation,
     playerDisconnected,
     earthNormCreate,
-    earthNormUpdate
+    earthNormUpdate,
+    earthQCreate,
+    earthQUpdate
 }
 
 /// <summary>Sent from client to server.</summary>

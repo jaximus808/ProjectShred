@@ -483,6 +483,7 @@ MonoBehaviour:
   localEarthPlayerPrefab: {fileID: 5885737545435903262, guid: 97705dcb3ab3e9a45acbdd421db7b605, type: 3}
   earthPlayerPrefab: {fileID: 3814270115782344854, guid: a917a07e2083956408b960768572d0aa, type: 3}
   earthNormalAttackPrefab: {fileID: 5465805250008732043, guid: aeef4ed7824a67e4fa0ee65dd8be887f, type: 3}
+  earthQAttackPrefab: {fileID: 4507095468201969906, guid: f572d65d067b6ee47990d6293a33d65b, type: 3}
 --- !u!4 &234075349
 Transform:
   m_ObjectHideFlags: 0

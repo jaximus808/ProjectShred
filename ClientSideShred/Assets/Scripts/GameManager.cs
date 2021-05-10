@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 
     public static Dictionary<int, PlayerManager> players = new Dictionary<int, PlayerManager>();
     public static Dictionary<int, GameObject> earthNormalAttacks = new Dictionary<int, GameObject>();
+    public static Dictionary<int, GameObject> earthQAttacks = new Dictionary<int, GameObject>();
 
     public GameObject localPlayerPrefab;
     public GameObject playerPrefab;
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour
     public GameObject earthPlayerPrefab;
 
     public GameObject earthNormalAttackPrefab;
+    public GameObject earthQAttackPrefab;
 
     private void Awake()
     {
@@ -73,5 +75,10 @@ public class GameManager : MonoBehaviour
     {
         GameObject newEarthAttack = Instantiate(earthNormalAttackPrefab, _position, _rotation);
         earthNormalAttacks.Add(_id, newEarthAttack);
+    }
+    public void createEarthQAttack(int _id, Vector3 _position, Quaternion _rotation)
+    {
+        GameObject newEarthAttack = Instantiate(earthQAttackPrefab, _position, _rotation);
+        earthQAttacks.Add(_id, newEarthAttack);
     }
 }

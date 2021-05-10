@@ -39,7 +39,8 @@ public class ServerHandle
             _inputs[i] = _packet.ReadBool();
         }
         Quaternion _rotation = _packet.ReadQuaternion();
-
-        Server.clients[_fromClient].player.SendInput(_inputs, _rotation);
+        //maybe instead just send camera rotation instead of entire player
+        Quaternion _headRotation = _packet.ReadQuaternion();
+        Server.clients[_fromClient].player.SendInput(_inputs, _rotation, _headRotation);
     }
 }

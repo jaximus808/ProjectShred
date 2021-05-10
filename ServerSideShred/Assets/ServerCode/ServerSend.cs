@@ -154,16 +154,24 @@ public class ServerSend
             }
         }
     }
-
-    public static void PlayerDisconnected(int _id)
+    //maybe merge these two packets
+    public static void ShootEarthQ(int _id, Vector3 _position, Quaternion _rotation, bool _setUp, int _clientId)
     {
-        using (Packet _packet = new Packet((int)ServerPackets.playerDisconnected))
+        using (Packet _packet = new Packet((int)ServerPackets.earthQCreate))
         {
             _packet.Write(_id);
-            SendTCPDataToAll(_packet);
+            _packet.Write(_position);
+            _packet.Write(_rotation);
+            if (!_setUp)
+            {
+                SendUDPDataToAll(_packet);
+            }
+            else
+            {
+                SendUDPData(_clientId, _packet);
+            }
         }
     }
-
     public static void updateEarthNorm(int _id, Vector3 _position, Quaternion _rotation)
     {
         using (Packet _packet = new Packet((int)ServerPackets.earthNormUpdate))
@@ -174,5 +182,26 @@ public class ServerSend
             SendUDPDataToAll(_packet);
         }
     }
+    public static void updateEarthQ(int _id, Vector3 _position, Quaternion _rotation)
+    {
+        
+        using (Packet _packet = new Packet((int)ServerPackets.earthQUpdate))
+        {
+            _packet.Write(_id);
+            _packet.Write(_position);
+            _packet.Write(_rotation);
+            SendUDPDataToAll(_packet);
+        }
+    }
+    public static void PlayerDisconnected(int _id)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.playerDisconnected))
+        {
+            _packet.Write(_id);
+            SendTCPDataToAll(_packet);
+        }
+    }
+
+    
     #endregion
 }

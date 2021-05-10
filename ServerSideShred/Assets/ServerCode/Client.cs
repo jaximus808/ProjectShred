@@ -229,7 +229,11 @@ public class Client
             Debug.Log("FUCK");
             ServerSend.ShootEarthNorm(_curNormAtk.id, _curNormAtk.transform.position, _curNormAtk.transform.rotation, true, id);
         }
-
+        foreach (QEarth _curNormAtk in NetworkManager.InActionEarthQ.Values)
+        {
+            Debug.Log("FUCK");
+            ServerSend.ShootEarthQ(_curNormAtk.id, _curNormAtk.transform.position, _curNormAtk.transform.rotation, true, id);
+        }
         Debug.Log("Shoot");
     }
 
@@ -269,6 +273,7 @@ public class Client
         {
             if(player != null)
             {
+                player.CleanUp();
                 UnityEngine.Object.Destroy(player.gameObject);
                 player = null;
             }

@@ -65,6 +65,23 @@ public class ClientHandle : MonoBehaviour
         GameManager.earthNormalAttacks[_id].transform.rotation = _rotation;
     }
 
+    public static void EarthQCreate(Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        Vector3 _position = _packet.ReadVector3();
+        Quaternion _rotation = _packet.ReadQuaternion();
+        GameManager.instance.createEarthQAttack(_id, _position, _rotation);
+    }
+    public static void EarthQUpdate(Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        Vector3 _position = _packet.ReadVector3();
+        Quaternion _rotation = _packet.ReadQuaternion();
+        if (!GameManager.earthQAttacks.ContainsKey(_id)) return;
+        GameManager.earthQAttacks[_id].transform.position = _position;
+        GameManager.earthQAttacks[_id].transform.rotation = _rotation;
+    }
+
     public static void PlayerDisconnect(Packet _packet)
     {
         Debug.Log("recievied");

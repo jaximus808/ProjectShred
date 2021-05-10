@@ -21,12 +21,22 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void SendInput(bool[] _inputs,Quaternion _rotation)
+    public void SendInput(bool[] _inputs,Quaternion _rotation,Quaternion _headRotation)
     {
         switch(classId)
         {
             case 0:
-                earthPlayer.SetInput(_inputs, _rotation);
+                earthPlayer.SetInput(_inputs, _rotation, _headRotation);
+                break;
+        }
+    }
+
+    public void CleanUp()
+    {
+        switch(classId)
+        {
+            case 0:
+                earthPlayer.Disconnect();
                 break;
         }
     }

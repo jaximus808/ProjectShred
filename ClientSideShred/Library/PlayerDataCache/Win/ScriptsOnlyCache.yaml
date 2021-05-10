@@ -5,7 +5,6 @@ ScriptsOnlyBuild:
     - Client
     - EarthController
     - GameManager
-    - PlayerController
     - PlayerManager
     - ThreadManager
     - UIManager
@@ -273,7 +272,7 @@ ScriptsOnlyBuild:
     className: EventTrigger
   - hash:
       serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+      Hash: b797612e8ff0f428183799b294c05883
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: EarthController
@@ -399,7 +398,7 @@ ScriptsOnlyBuild:
     className: TMP_Settings
   - hash:
       serializedVersion: 2
-      Hash: 737b8e993a64ae9537a2da03b000c6a3
+      Hash: 2c14c5aa9dc69f16b5b52d68b119d18b
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameManager
@@ -583,12 +582,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TextContainer
-  - hash:
-      serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: PlayerController
   platform: 5
   scenePathNames:
   - Assets/Game.unity

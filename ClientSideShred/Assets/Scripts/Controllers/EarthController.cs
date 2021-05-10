@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EarthController : MonoBehaviour
 {
+    public Transform cameraRot; 
     private void FixedUpdate()
     {
         SendInputToServer();
@@ -23,6 +24,6 @@ public class EarthController : MonoBehaviour
             Input.GetKey(KeyCode.Q),
         };
 
-        ClientSend.PlayerMovement(_inputs);
+        ClientSend.PlayerMovement(_inputs, cameraRot.rotation);
     }
 }
