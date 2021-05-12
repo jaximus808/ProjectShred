@@ -137,28 +137,11 @@ public class ServerSend
         }
     }
 
-    public static void ShootEarthNorm(int _id, Vector3 _position, Quaternion _rotation, bool _setUp, int _clientId)
+    public static void CreateProjectile(int _projectileId, int _id, Vector3 _position, Quaternion _rotation, bool _setUp, int _clientId)
     {
-        using (Packet _packet = new Packet((int)ServerPackets.earthNormCreate))
+        using (Packet _packet = new Packet((int)ServerPackets.createProjectile))
         {
-            _packet.Write(_id);
-            _packet.Write(_position);
-            _packet.Write(_rotation);
-            if(!_setUp)
-            {
-                SendUDPDataToAll(_packet);
-            }
-            else
-            {
-                SendUDPData(_clientId, _packet);
-            }
-        }
-    }
-    //maybe merge these two packets
-    public static void ShootEarthQ(int _id, Vector3 _position, Quaternion _rotation, bool _setUp, int _clientId)
-    {
-        using (Packet _packet = new Packet((int)ServerPackets.earthQCreate))
-        {
+            _packet.Write(_projectileId);
             _packet.Write(_id);
             _packet.Write(_position);
             _packet.Write(_rotation);
@@ -172,27 +155,20 @@ public class ServerSend
             }
         }
     }
-    public static void updateEarthNorm(int _id, Vector3 _position, Quaternion _rotation)
+    public static void UpdateProjectile(int _projectileId,int _id, Vector3 _position, Quaternion _rotation)
     {
-        using (Packet _packet = new Packet((int)ServerPackets.earthNormUpdate))
+
+        using (Packet _packet = new Packet((int)ServerPackets.updateProjectile))
         {
+            _packet.Write(_projectileId);
             _packet.Write(_id);
             _packet.Write(_position);
             _packet.Write(_rotation);
             SendUDPDataToAll(_packet);
         }
     }
-    public static void updateEarthQ(int _id, Vector3 _position, Quaternion _rotation)
-    {
-        
-        using (Packet _packet = new Packet((int)ServerPackets.earthQUpdate))
-        {
-            _packet.Write(_id);
-            _packet.Write(_position);
-            _packet.Write(_rotation);
-            SendUDPDataToAll(_packet);
-        }
-    }
+
+
     public static void PlayerDisconnected(int _id)
     {
         using (Packet _packet = new Packet((int)ServerPackets.playerDisconnected))

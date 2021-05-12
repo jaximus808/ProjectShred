@@ -226,13 +226,12 @@ public class Client
         Debug.Log("WillShoot");
         foreach (NormalEarthAttack _curNormAtk in NetworkManager.NormalEarthAttacks.Values)
         {
-            Debug.Log("FUCK");
-            ServerSend.ShootEarthNorm(_curNormAtk.id, _curNormAtk.transform.position, _curNormAtk.transform.rotation, true, id);
+            ServerSend.CreateProjectile(0,_curNormAtk.id, _curNormAtk.transform.position, _curNormAtk.transform.rotation, true, id);
         }
         foreach (QEarth _curNormAtk in NetworkManager.InActionEarthQ.Values)
         {
-            Debug.Log("FUCK");
-            ServerSend.ShootEarthQ(_curNormAtk.id, _curNormAtk.transform.position, _curNormAtk.transform.rotation, true, id);
+            
+            ServerSend.CreateProjectile(1,_curNormAtk.id, _curNormAtk.transform.position, _curNormAtk.transform.rotation, true, id);
         }
         Debug.Log("Shoot");
     }

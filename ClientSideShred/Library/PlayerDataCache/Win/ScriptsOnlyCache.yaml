@@ -56,37 +56,37 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1486}
+      Script: {instanceID: 1494}
     - Class: 114
-      Script: {instanceID: 2014}
+      Script: {instanceID: 2022}
     - Class: 114
-      Script: {instanceID: 2052}
+      Script: {instanceID: 2060}
     - Class: 114
-      Script: {instanceID: 2114}
+      Script: {instanceID: 2122}
     - Class: 114
-      Script: {instanceID: 2208}
+      Script: {instanceID: 2216}
     - Class: 114
-      Script: {instanceID: 2398}
+      Script: {instanceID: 2406}
     - Class: 114
-      Script: {instanceID: 2620}
+      Script: {instanceID: 2628}
     - Class: 114
-      Script: {instanceID: 2678}
+      Script: {instanceID: 2686}
     - Class: 114
-      Script: {instanceID: 2800}
+      Script: {instanceID: 2808}
     - Class: 114
-      Script: {instanceID: 2812}
+      Script: {instanceID: 2820}
     - Class: 114
-      Script: {instanceID: 2880}
+      Script: {instanceID: 2888}
     - Class: 114
-      Script: {instanceID: 3026}
+      Script: {instanceID: 3034}
     - Class: 114
-      Script: {instanceID: 3094}
+      Script: {instanceID: 3102}
     - Class: 114
-      Script: {instanceID: 3336}
+      Script: {instanceID: 3344}
     - Class: 114
-      Script: {instanceID: 3468}
+      Script: {instanceID: 3476}
     - Class: 114
-      Script: {instanceID: 3600}
+      Script: {instanceID: 3608}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -398,7 +398,7 @@ ScriptsOnlyBuild:
     className: TMP_Settings
   - hash:
       serializedVersion: 2
-      Hash: 2c14c5aa9dc69f16b5b52d68b119d18b
+      Hash: 0072cb69ff61e27cbb5b0decde7b967a
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameManager

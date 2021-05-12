@@ -47,41 +47,27 @@ public class ClientHandle : MonoBehaviour
         GameManager.players[_id].transform.rotation = _rotation;
     }
 
-    public static void CreateNormEarthAttack(Packet _packet)
+    public static void CreateProjectile(Packet _packet)
     {
+        int _projectileTypeId = _packet.ReadInt();
         int _id = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
         Quaternion _rotation = _packet.ReadQuaternion();
-        GameManager.instance.createEarthNormAttack(_id, _position, _rotation);
+        GameManager.instance.CreateProjectile(_projectileTypeId,_id, _position, _rotation);
     }
 
-    public static void EarthNormUpdate(Packet _packet)
+    public static void UpdateProjectile(Packet _packet)
     {
+        int _projectileId = _packet.ReadInt();
         int _id = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
         Quaternion _rotation = _packet.ReadQuaternion();
-        if (!GameManager.earthNormalAttacks.ContainsKey(_id)) return;
-        GameManager.earthNormalAttacks[_id].transform.position = _position;
-        GameManager.earthNormalAttacks[_id].transform.rotation = _rotation;
+        if (!GameManager.Projectiles[_projectileId].ContainsKey(_id)) return;
+        GameManager.Projectiles[_projectileId][_id].transform.position = _position;
+        GameManager.Projectiles[_projectileId][_id].transform.rotation = _rotation;
     }
 
-    public static void EarthQCreate(Packet _packet)
-    {
-        int _id = _packet.ReadInt();
-        Vector3 _position = _packet.ReadVector3();
-        Quaternion _rotation = _packet.ReadQuaternion();
-        GameManager.instance.createEarthQAttack(_id, _position, _rotation);
-    }
-    public static void EarthQUpdate(Packet _packet)
-    {
-        int _id = _packet.ReadInt();
-        Vector3 _position = _packet.ReadVector3();
-        Quaternion _rotation = _packet.ReadQuaternion();
-        if (!GameManager.earthQAttacks.ContainsKey(_id)) return;
-        GameManager.earthQAttacks[_id].transform.position = _position;
-        GameManager.earthQAttacks[_id].transform.rotation = _rotation;
-    }
-
+    
     public static void PlayerDisconnect(Packet _packet)
     {
         Debug.Log("recievied");

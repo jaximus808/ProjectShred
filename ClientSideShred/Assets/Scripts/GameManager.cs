@@ -6,9 +6,12 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public int projectiles;
+    
     public static Dictionary<int, PlayerManager> players = new Dictionary<int, PlayerManager>();
     public static Dictionary<int, GameObject> earthNormalAttacks = new Dictionary<int, GameObject>();
     public static Dictionary<int, GameObject> earthQAttacks = new Dictionary<int, GameObject>();
+    public static Dictionary<int, Dictionary<int, GameObject>> Projectiles = new Dictionary<int, Dictionary<int, GameObject>>();
 
     public GameObject localPlayerPrefab;
     public GameObject playerPrefab;
@@ -16,8 +19,10 @@ public class GameManager : MonoBehaviour
     public GameObject localEarthPlayerPrefab;
     public GameObject earthPlayerPrefab;
 
-    public GameObject earthNormalAttackPrefab;
-    public GameObject earthQAttackPrefab;
+    //0 = EarthnormalAttack; 1 = EarthQPrefab
+    public GameObject[] ProjectilesPrefab; 
+    //public GameObject earthNormalAttackPrefab;
+    //public GameObject earthQAttackPrefab;
 
     private void Awake()
     {
@@ -29,6 +34,10 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Instance already exists, destroying object!");
             Destroy(this);
+        }
+        for(int i = 0; i < projectiles; i++)
+        {
+            Projectiles.Add(i, new Dictionary<int, GameObject>());
         }
     }
 
@@ -71,14 +80,11 @@ public class GameManager : MonoBehaviour
         _player.username = _username;
         players.Add(_id, _player);
     }
-    public void createEarthNormAttack(int _id, Vector3 _position, Quaternion _rotation)
+    
+
+    public void CreateProjectile(int _projectileId, int _id, Vector3 _position, Quaternion _rotation)
     {
-        GameObject newEarthAttack = Instantiate(earthNormalAttackPrefab, _position, _rotation);
-        earthNormalAttacks.Add(_id, newEarthAttack);
-    }
-    public void createEarthQAttack(int _id, Vector3 _position, Quaternion _rotation)
-    {
-        GameObject newEarthAttack = Instantiate(earthQAttackPrefab, _position, _rotation);
-        earthQAttacks.Add(_id, newEarthAttack);
+        GameObject newProjectile = Instantiate(ProjectilesPrefab[_projectileId], _position, _rotation);
+        Projectiles[_projectileId].Add(_id, newProjectile);
     }
 }

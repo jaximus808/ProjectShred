@@ -10,6 +10,6 @@ public class NormalEarthAttack : MonoBehaviour
     // Update is called once per frame
     private void FixedUpdate()
     {
-        ServerSend.updateEarthNorm(id, transform.position, transform.rotation);
+        ServerSend.UpdateProjectile(0,id, transform.position, transform.rotation);
     }
 }

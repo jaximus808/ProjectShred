@@ -14,7 +14,7 @@ public class QEarth : MonoBehaviour
     // Update is called once per frame
     private void FixedUpdate()
     {
-        ServerSend.updateEarthQ(id, transform.position, transform.rotation);
+        ServerSend.UpdateProjectile(1,id, transform.position, transform.rotation);
         if (pending)
         {
             if (head == null || head == null) return;

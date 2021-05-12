@@ -304,10 +304,8 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.playerPosition, ClientHandle.PlayerPosition },
             { (int)ServerPackets.playerRotation, ClientHandle.PlayerRotation },
             { (int)ServerPackets.playerDisconnected, ClientHandle.PlayerDisconnect },
-            { (int)ServerPackets.earthNormCreate, ClientHandle.CreateNormEarthAttack},
-            { (int)ServerPackets.earthNormUpdate, ClientHandle.EarthNormUpdate},
-            { (int)ServerPackets.earthQCreate, ClientHandle.EarthQCreate},
-            { (int)ServerPackets.earthQUpdate, ClientHandle.EarthQUpdate}
+            { (int)ServerPackets.createProjectile, ClientHandle.CreateProjectile},
+            { (int)ServerPackets.updateProjectile, ClientHandle.UpdateProjectile}
         };
         Debug.Log("Initialized packets.");
     }
