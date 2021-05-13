@@ -13,7 +13,8 @@ public enum ServerPackets
     playerRotation,
     playerDisconnected,
     createProjectile,
-    updateProjectile
+    updateProjectile,
+    raiseEarthWall
 }
 
 /// <summary>Sent from client to server.</summary>

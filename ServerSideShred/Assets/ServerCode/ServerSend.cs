@@ -168,6 +168,16 @@ public class ServerSend
         }
     }
 
+    public static void RaiseEarthWall(int _wallId, Vector3 _scale)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.raiseEarthWall))
+        {
+            _packet.Write(_wallId);
+            _packet.Write(_scale);
+            SendUDPDataToAll(_packet);
+        }
+    }
+
 
     public static void PlayerDisconnected(int _id)
     {

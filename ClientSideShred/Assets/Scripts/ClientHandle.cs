@@ -67,7 +67,14 @@ public class ClientHandle : MonoBehaviour
         GameManager.Projectiles[_projectileId][_id].transform.rotation = _rotation;
     }
 
-    
+    public static void RaiseEarthWall(Packet _packet)
+    {
+        int _wallId = _packet.ReadInt();
+        Vector3 _newScale = _packet.ReadVector3();
+        if (!GameManager.Projectiles[2].ContainsKey(_wallId)) return;
+        GameManager.Projectiles[2][_wallId].transform.localScale = _newScale;
+    }
+
     public static void PlayerDisconnect(Packet _packet)
     {
         Debug.Log("recievied");

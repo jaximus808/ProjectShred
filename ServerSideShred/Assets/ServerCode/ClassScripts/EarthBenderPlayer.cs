@@ -15,8 +15,8 @@ public class EarthBenderPlayer : MonoBehaviour
     public float setTimerQAdd;
     public int qAddCap;
     public float setTimerC;
-    public float raiseRate; 
-
+    public float raiseRate;
+    public Transform groundCheck;
     [SerializeField] private CharacterController controller;
 
     [SerializeField] private GameObject NormalAttackGameOb;
@@ -30,6 +30,8 @@ public class EarthBenderPlayer : MonoBehaviour
 
     [SerializeField] private GameObject headOb;
     [SerializeField] private Transform qAim;
+
+    [SerializeField] private LayerMask PlayerLayer;
 
     private float yVelocity = 0;
     private bool[] inputs;
@@ -159,7 +161,7 @@ public class EarthBenderPlayer : MonoBehaviour
         {
             RaycastHit hit;
             //maybe make it where u can hold, or make it like sage wall, i like first idea better
-            if(!Physics.Raycast(headOb.transform.position, headOb.transform.forward, out hit, 300))
+            if(!Physics.Raycast(headOb.transform.position, headOb.transform.forward, out hit, 300, PlayerLayer))
             {
                 return;
             }
@@ -173,6 +175,7 @@ public class EarthBenderPlayer : MonoBehaviour
         {
             //Raise Object 
             NetworkManager.EarthCScale[currCWall].transform.localScale += new Vector3(0f, raiseRate, 0);
+            ServerSend.RaiseEarthWall(currCWall, NetworkManager.EarthCScale[currCWall].transform.localScale);
         }
         else if(raising)
         {
@@ -202,7 +205,7 @@ public class EarthBenderPlayer : MonoBehaviour
             //create a limit maybe?
             NetworkManager.EarthCScale.Add(0, curScalingWall);
             currCWall = 0;
-            //ServerSend.CreateProjectile(1, 0, spawnPos.position, currQEarthAtk.transform.rotation, false, 0);
+            ServerSend.CreateProjectile(2, 0, _position, _direction, false, 0);
             return;
         }
         int _atkId = _keyArrayEarthC[_keyArrayEarthC.Length - 1] + 1;
@@ -211,7 +214,7 @@ public class EarthBenderPlayer : MonoBehaviour
         NetworkManager.EarthCScale.Add(_atkId, curScalingWall);
         currCWall = _atkId;
         Debug.Log($"NewC: {NetworkManager.EarthCScale[_atkId].id}");
-        //ServerSend.CreateProjectile(1, _atkId, spawnPos.position, currQEarthAtk.transform.rotation, false, 0);
+        ServerSend.CreateProjectile(2, _atkId, _position, _direction, false, 0);
 
 
     }
@@ -293,8 +296,8 @@ public class EarthBenderPlayer : MonoBehaviour
         //transform.position += _moveDirection * moveSpeed;
         //if()
         _moveDirection *= moveSpeed;
-
-        if (controller.isGrounded)
+        
+        if (Physics.CheckSphere(groundCheck.position, 1f, PlayerLayer))
         {
             yVelocity = 0f;
             if (_inputDirection.z == 1)
