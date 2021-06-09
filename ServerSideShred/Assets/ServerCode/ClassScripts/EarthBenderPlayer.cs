@@ -23,6 +23,7 @@ public class EarthBenderPlayer : MonoBehaviour
     public float radiusOfUlt; 
     public float setTimerR;
     public float maximumPull;
+    public float setRAddTimer; 
 
     [SerializeField] private CharacterController controller;
     [SerializeField] private GameObject EJoint;
@@ -45,9 +46,11 @@ public class EarthBenderPlayer : MonoBehaviour
 
     private GameObject EConnectedOb;
     private CEarth cEarthGrabbed;
+    private REarth rEarthGrabbed;
 
     private Dictionary<int, Dictionary<int, Vector3>> UltimateSpawns = new Dictionary<int, Dictionary<int, Vector3>>();
 
+    private string eState = "none";
     private bool canR = true;
     private bool inRCharge = false;
     private int ultLayer = 0;
@@ -70,6 +73,8 @@ public class EarthBenderPlayer : MonoBehaviour
     private float timerC = 0f;
     private float timerE = 0f;
     private float timerR = 0f;
+    private float timerRAdd = 0f;
+
 
     private int currCWall = 0;
     private int QTotalAdd = 0;
@@ -80,6 +85,7 @@ public class EarthBenderPlayer : MonoBehaviour
         timerC = setTimerC;
         timerE = setTimerE;
         timerNorm = setTimerNorm;
+        timerR = setTimerR;
         timerQ = setTimerQ;
         canNormalAtk = true;
         gravity *= Time.fixedDeltaTime * Time.fixedDeltaTime;
@@ -124,13 +130,35 @@ public class EarthBenderPlayer : MonoBehaviour
             _inputDirection.z = 1;
         }
         
-        if(inputs[11] && canR && !inRCharge)
+        if(inputs[11] && canR)
         {
-            CommenceRCharge();
+            if(timerRAdd <= 0 )
+            {
+                if(ultLayer < 3)
+                {
+                    timerRAdd = setRAddTimer;
+                    CommenceRCharge();
+                }
+                
+            }
+            else
+            {
+                timerRAdd -= Time.fixedDeltaTime; 
+            }
+            
         }
         else if (!inputs[11] && canR && inRCharge)
         {
             ReleaseUlt();
+        }
+        else if (!canR)
+        {
+            timerR -= Time.fixedDeltaTime;
+            if (timerR <= 0)
+            {
+                timerR = setTimerR;
+                canR = true;
+            }
         }
         if (inRCharge) return;
         Move(_inputDirection);
@@ -140,13 +168,24 @@ public class EarthBenderPlayer : MonoBehaviour
         }
         else if (inputs[5] && inEMode)
         {
-            cEarthGrabbed.rb.AddForce(headOb.transform.forward * (EForce + cEarthGrabbed.transform.localScale.y));
-            cEarthGrabbed.rb.useGravity = true;
-            Destroy(EConnectedOb);
+            switch(eState)
+            {
+                case "CWall":
+                    cEarthGrabbed.rb.AddForce(headOb.transform.forward * (EForce + cEarthGrabbed.transform.localScale.y));
+                    cEarthGrabbed.rb.useGravity = true;
+                    Destroy(EConnectedOb);
+                    break ;
+                case "RUlt":
+                    rEarthGrabbed.rb.AddForce(headOb.transform.forward * (EForce + rEarthGrabbed.transform.localScale.y));
+                    rEarthGrabbed.rb.useGravity = true;
+                    Destroy(EConnectedOb);
+                    break;
+            }
+            eState = "none";
             canE = false;
             inEMode = false;
             canNormalAtk = false;
-            timerNorm = setTimerNorm + 5;
+            timerNorm = setTimerNorm + 3;
         }
         else if(inputs[8] && canE && inEMode)
         {
@@ -159,7 +198,15 @@ public class EarthBenderPlayer : MonoBehaviour
         
         else if(canE && inEMode)
         {
-            cEarthGrabbed.rb.useGravity = true;
+            switch (eState)
+            {
+                case "CWall":
+                    cEarthGrabbed.rb.useGravity = true;
+                    break;
+                case "RUlt":
+                    rEarthGrabbed.rb.useGravity = true;
+                    break;
+            }
             Destroy(EConnectedOb);
             cEarthGrabbed = null;
             canE = false;
@@ -273,22 +320,50 @@ public class EarthBenderPlayer : MonoBehaviour
     {
         Debug.Log("BRO");
         inRCharge = true;
-        ultLayer = 1; 
+        ultLayer++; 
         
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 8*ultLayer; i++)
         {
-            UltimateSpawns[0].Add(i, new Vector3(Mathf.Cos((Mathf.PI / 4f) * (i + 1)) * radiusOfUlt, transform.position.y, Mathf.Sin((Mathf.PI / 4f) * (i + 1)) * radiusOfUlt));
+            UltimateSpawns[ultLayer - 1].Add(i, new Vector3(Mathf.Cos((Mathf.PI / (4f * ultLayer)) * (i + 1)) * (radiusOfUlt*ultLayer), transform.position.y, Mathf.Sin((Mathf.PI / (4f * ultLayer)) * (i + 1)) * radiusOfUlt * ultLayer));
         }
     }
 
     private void ReleaseUlt()
     {
         canR = false;
-        inRCharge = false; 
-        for (int i = 0; i < 8; i++)
+        inRCharge = false;
+
+        timerR = setTimerR;
+        for (int i = 1; i < ultLayer+1; i++)
         {
-            Instantiate(UltimateSpike, transform.position+UltimateSpawns[0][i],Quaternion.identity);
+            for (int y = 0; y < 8*i; y++)
+            {
+                REarth _rEarth = Instantiate(UltimateSpike, transform.position + UltimateSpawns[i-1][y], Quaternion.identity).GetComponent<REarth>();
+                renderServerUlt(_rEarth, transform.position + UltimateSpawns[i - 1][y], Quaternion.identity);
+            }
         }
+        
+        
+    }
+
+    private void renderServerUlt(REarth _rEarth, Vector3 _position, Quaternion _rotation)
+    {
+        REarth curREarth = _rEarth;
+        int[] _keyArrayEarthR = NetworkManager.UltEarth.Keys.ToArray();
+        if (_keyArrayEarthR.Length == 0)
+        {
+            curREarth.id = 0;
+            //create a limit maybe?
+            NetworkManager.UltEarth.Add(0, curREarth);
+            ServerSend.CreateProjectile(3, 0, _position, _rotation, false, 0);
+            return;
+        }
+        int _atkId = _keyArrayEarthR[_keyArrayEarthR.Length - 1] + 1;
+        //idQs[QTotalAdd - 1] = _atkId;
+        curREarth.id = _atkId;
+        NetworkManager.UltEarth.Add(_atkId, curREarth);
+        Debug.Log($"NewR: {NetworkManager.UltEarth[_atkId].id}");
+        ServerSend.CreateProjectile(3, _atkId, _position, _rotation, false, 0);
     }
 
     private void TryECast()
@@ -297,15 +372,31 @@ public class EarthBenderPlayer : MonoBehaviour
         Debug.Log("UWU");
         if (Physics.Raycast(headOb.transform.position, headOb.transform.forward* 200, out eHit, 200,  ECast))
         {
-            
-            float magPoint = eHit.distance;
-            Vector3 eConPoint = headOb.transform.forward * magPoint;
-            EConnectedOb = Instantiate(EJoint, transform.position + eConPoint,headOb.transform.rotation);
-            cEarthGrabbed = eHit.transform.GetComponent<CEarth>();
-            EConnectedOb.transform.parent = headOb.transform; 
-            inEMode = true;
-            eHit.transform.gameObject.GetComponent<Rigidbody>().isKinematic = false;
-            eHit.transform.gameObject.GetComponent<Rigidbody>().useGravity = false;
+            if(eHit.transform.tag == "CWall")
+            {
+                eState = "CWall";
+                float magPoint = eHit.distance;
+                Vector3 eConPoint = headOb.transform.forward * magPoint;
+                EConnectedOb = Instantiate(EJoint, transform.position + eConPoint, headOb.transform.rotation);
+                cEarthGrabbed = eHit.transform.GetComponent<CEarth>();
+                EConnectedOb.transform.parent = headOb.transform;
+                inEMode = true;
+                eHit.transform.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+                eHit.transform.gameObject.GetComponent<Rigidbody>().useGravity = false;
+            }
+            if (eHit.transform.tag == "RUlt")
+            {
+                eState = "RUlt";
+                float magPoint = eHit.distance;
+                Vector3 eConPoint = headOb.transform.forward * magPoint;
+                EConnectedOb = Instantiate(EJoint, transform.position + eConPoint, headOb.transform.rotation);
+                rEarthGrabbed = eHit.transform.GetComponent<REarth>();
+                EConnectedOb.transform.parent = headOb.transform;
+                inEMode = true;
+                eHit.transform.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+                eHit.transform.gameObject.GetComponent<Rigidbody>().useGravity = false;
+            }
+
         }
     }
 
@@ -335,10 +426,22 @@ public class EarthBenderPlayer : MonoBehaviour
 
         //cEarthGrabbed.transform.position = Vector3.MoveTowards(cEarthGrabbed.transform.position, EConnectedOb.transform.position, gravityIntensity/2);
         //cEarthGrabbed.rb.MovePosition(EConnectedOb.transform.position);
-        Vector3 CMove = EConnectedOb.transform.position - (cEarthGrabbed.transform.position ); 
-        CMove = CMove.normalized;
-        CMove = CMove * (cEarthGrabbed.transform.localScale.y + 1000);
-        cEarthGrabbed.rb.AddForce(CMove);
+        switch(eState )
+        {
+            case "CWall":
+                Vector3 CMove = EConnectedOb.transform.position - (cEarthGrabbed.transform.position);
+                CMove = CMove.normalized;
+                CMove = CMove * (cEarthGrabbed.transform.localScale.y + 1000);
+                cEarthGrabbed.rb.AddForce(CMove);
+                break;
+            case "RUlt":
+                Vector3 RMove = EConnectedOb.transform.position - (rEarthGrabbed.transform.position);
+                RMove = RMove.normalized;
+                RMove = RMove * (rEarthGrabbed.mass + 1000);
+                rEarthGrabbed.rb.AddForce(RMove);
+                break; 
+        }
+        
     }
 
     private void CreateNewWall(Vector3 _position, Quaternion _direction)

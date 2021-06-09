@@ -9,6 +9,7 @@ public class NetworkManager : MonoBehaviour
     public static Dictionary<int, NormalEarthAttack> NormalEarthAttacks = new Dictionary<int, NormalEarthAttack>();
     public static Dictionary<int, QEarth> InActionEarthQ = new Dictionary<int, QEarth>();
     public static Dictionary<int, CEarth> EarthCScale = new Dictionary<int, CEarth>();
+    public static Dictionary<int, REarth> UltEarth = new Dictionary<int, REarth>();
 
     //public static Dictionary<int, PositionObject> PeningEathQ = new Dictionary<int, PositionObject>();
 

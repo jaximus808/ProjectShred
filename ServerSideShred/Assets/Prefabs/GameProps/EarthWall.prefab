@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4513370212294680191}
   - component: {fileID: 5731675010114429978}
   - component: {fileID: 8818400484598267153}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,9 +105,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2004120185563840089}
   - component: {fileID: 4712606229595280657}
-  m_Layer: 0
+  - component: {fileID: 4495884825629357002}
+  m_Layer: 9
   m_Name: EarthWall
-  m_TagString: Untagged
+  m_TagString: CWall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -140,4 +141,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  pending: 0
+  rb: {fileID: 4495884825629357002}
+  baseMass: 50
+--- !u!54 &4495884825629357002
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9016180597018171584}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 3

@@ -403,10 +403,19 @@ MonoBehaviour:
   qAddCap: 5
   setTimerC: 3
   raiseRate: 0.5
+  setTimerE: 2
   groundCheck: {fileID: 5158191946927322193}
+  gravityPull: 0.2
+  EForce: 200000
+  radiusOfUlt: 10
+  setTimerR: 3
+  maximumPull: 3000
+  setRAddTimer: 5
   controller: {fileID: 6359650146455104341}
+  EJoint: {fileID: 4131561091672700002, guid: f12a3da69a29f0641a2474539bf3582d, type: 3}
   NormalAttackGameOb: {fileID: 9148607806936840117, guid: 4cb018124f594de4d9c26b69da842e8c, type: 3}
   NormalAttackSpawn: {fileID: 5575975732137747929}
+  UltimateSpike: {fileID: 3121510185001579209, guid: 6ee0d50232338044b95e4a3f475e8cb9, type: 3}
   QAttackGameOb: {fileID: 4205336687996801076, guid: 560e9720b11871142ac2a717da892627, type: 3}
   QAttackSpawns:
   - {fileID: 6525013572437926709}
@@ -419,7 +428,10 @@ MonoBehaviour:
   qAim: {fileID: 3337924982173214376}
   PlayerLayer:
     serializedVersion: 2
-    m_Bits: 247
+    m_Bits: 759
+  ECast:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!143 &6359650146455104341
 CharacterController:
   m_ObjectHideFlags: 0

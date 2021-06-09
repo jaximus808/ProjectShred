@@ -478,7 +478,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4909a73076e5df147a9e4d5bb5bdf610, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectiles: 3
+  projectiles: 4
   localPlayerPrefab: {fileID: 5249216878928436357, guid: 1045460d9c8f0584ca3fb1cd9a74cc40, type: 3}
   playerPrefab: {fileID: 6558651169813403767, guid: d407dbd8ca8ac1e41bc4fb249acb55bb, type: 3}
   localEarthPlayerPrefab: {fileID: 5885737545435903262, guid: 97705dcb3ab3e9a45acbdd421db7b605, type: 3}
@@ -487,6 +487,7 @@ MonoBehaviour:
   - {fileID: 5465805250008732043, guid: aeef4ed7824a67e4fa0ee65dd8be887f, type: 3}
   - {fileID: 4507095468201969906, guid: f572d65d067b6ee47990d6293a33d65b, type: 3}
   - {fileID: 2275042801608931945, guid: 517f8c7d3e1caa049aac6614a36ddcfa, type: 3}
+  - {fileID: 3121510185001579209, guid: f9b5fdb2b929b6a4dba9b607dea03094, type: 3}
 --- !u!4 &234075349
 Transform:
   m_ObjectHideFlags: 0
@@ -628,7 +629,7 @@ Transform:
   m_GameObject: {fileID: 570307986}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 20, y: 1, z: 20}
+  m_LocalScale: {x: 50, y: 1, z: 50}
   m_Children: []
   m_Father: {fileID: 1628919834}
   m_RootOrder: 0
