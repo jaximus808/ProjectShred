@@ -6,6 +6,7 @@ public class CEarth : MonoBehaviour
 {
     public int id;
     public Rigidbody rb;
+    public float baseMass; 
 
     private Vector3 prevPos; 
     private Quaternion preRot; 
@@ -15,10 +16,11 @@ public class CEarth : MonoBehaviour
     {
         prevPos = transform.position;
         preRot = transform.rotation; 
+
     }
     private void FixedUpdate()
     {
-        rb.mass = transform.localScale.y;
+        rb.mass = transform.localScale.y+baseMass;
         if (prevPos == transform.position && preRot == transform.rotation) return;
         ServerSend.UpdateProjectile(2, id, transform.position, transform.rotation);
         prevPos = transform.position;

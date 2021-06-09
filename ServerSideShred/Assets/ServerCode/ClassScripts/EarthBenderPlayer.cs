@@ -18,7 +18,11 @@ public class EarthBenderPlayer : MonoBehaviour
     public float raiseRate;
     public float setTimerE;
     public Transform groundCheck;
-    public float gravityPull; 
+    public float gravityPull;
+    public float EForce;
+    public float radiusOfUlt; 
+    public float setTimerR;
+    public float maximumPull;
 
     [SerializeField] private CharacterController controller;
     [SerializeField] private GameObject EJoint;
@@ -26,6 +30,7 @@ public class EarthBenderPlayer : MonoBehaviour
     [SerializeField] private GameObject NormalAttackGameOb;
     [SerializeField] private Transform NormalAttackSpawn;
 
+    [SerializeField] private GameObject UltimateSpike;
 
     [SerializeField] private GameObject QAttackGameOb;
     [SerializeField] private Transform[] QAttackSpawns;
@@ -39,8 +44,13 @@ public class EarthBenderPlayer : MonoBehaviour
     [SerializeField] private LayerMask ECast;
 
     private GameObject EConnectedOb;
-    private CEarth cEarthGrabbed; 
+    private CEarth cEarthGrabbed;
 
+    private Dictionary<int, Dictionary<int, Vector3>> UltimateSpawns = new Dictionary<int, Dictionary<int, Vector3>>();
+
+    private bool canR = true;
+    private bool inRCharge = false;
+    private int ultLayer = 0;
     private float yVelocity = 0;
     private bool[] inputs;
     private float velocity;
@@ -59,6 +69,7 @@ public class EarthBenderPlayer : MonoBehaviour
     private float timerQAdd = 0f;
     private float timerC = 0f;
     private float timerE = 0f;
+    private float timerR = 0f;
 
     private int currCWall = 0;
     private int QTotalAdd = 0;
@@ -74,6 +85,9 @@ public class EarthBenderPlayer : MonoBehaviour
         gravity *= Time.fixedDeltaTime * Time.fixedDeltaTime;
         moveSpeed *= Time.fixedDeltaTime;
         jumpSpeed *= Time.fixedDeltaTime;
+        UltimateSpawns.Add(0, new Dictionary < int, Vector3>() );
+        UltimateSpawns.Add(1, new Dictionary<int, Vector3>());
+        UltimateSpawns.Add(2, new Dictionary<int, Vector3>());
     }
 
     public void Initialize(Player _player)
@@ -81,12 +95,13 @@ public class EarthBenderPlayer : MonoBehaviour
         //id = _id;
         //username = _username;
         player = _player;
-        inputs = new bool[9];
+        inputs = new bool[12];
     }
 
     /// <summary>Processes player input and moves the player.</summary>
     public void FixedUpdate()
     {
+        Debug.DrawRay(headOb.transform.position, headOb.transform.forward , Color.green);
         Vector3 _inputDirection = Vector3.zero;
         if (inputs[0])
         {
@@ -108,18 +123,45 @@ public class EarthBenderPlayer : MonoBehaviour
         {
             _inputDirection.z = 1;
         }
-        Move(_inputDirection);
         
-        if(inputs[8] && canE&& !inEMode)
+        if(inputs[11] && canR && !inRCharge)
+        {
+            CommenceRCharge();
+        }
+        else if (!inputs[11] && canR && inRCharge)
+        {
+            ReleaseUlt();
+        }
+        if (inRCharge) return;
+        Move(_inputDirection);
+        if (inputs[8] && canE&& !inEMode)
         {
             TryECast();
         }
+        else if (inputs[5] && inEMode)
+        {
+            cEarthGrabbed.rb.AddForce(headOb.transform.forward * (EForce + cEarthGrabbed.transform.localScale.y));
+            cEarthGrabbed.rb.useGravity = true;
+            Destroy(EConnectedOb);
+            canE = false;
+            inEMode = false;
+            canNormalAtk = false;
+            timerNorm = setTimerNorm + 5;
+        }
         else if(inputs[8] && canE && inEMode)
         {
+            float multiplier = 0f;
+            if (inputs[9]) multiplier += 1f;
+            if(inputs[10]) multiplier -= 1f;
+            EConnectedOb.transform.position = EConnectedOb.transform.position + EConnectedOb.transform.forward * multiplier;
             MoveGravityWell();
         }
+        
         else if(canE && inEMode)
         {
+            cEarthGrabbed.rb.useGravity = true;
+            Destroy(EConnectedOb);
+            cEarthGrabbed = null;
             canE = false;
             inEMode = false; 
 
@@ -173,7 +215,7 @@ public class EarthBenderPlayer : MonoBehaviour
                 canQ = true;
             }
         }
-        if (canNormalAtk && inputs[5])
+        if (canNormalAtk && inputs[5] && !inEMode)
         {
             canNormalAtk = false;
             Debug.Log("Fire!");
@@ -227,24 +269,76 @@ public class EarthBenderPlayer : MonoBehaviour
         }
     }
 
+    private void CommenceRCharge()
+    {
+        Debug.Log("BRO");
+        inRCharge = true;
+        ultLayer = 1; 
+        
+        for (int i = 0; i < 8; i++)
+        {
+            UltimateSpawns[0].Add(i, new Vector3(Mathf.Cos((Mathf.PI / 4f) * (i + 1)) * radiusOfUlt, transform.position.y, Mathf.Sin((Mathf.PI / 4f) * (i + 1)) * radiusOfUlt));
+        }
+    }
+
+    private void ReleaseUlt()
+    {
+        canR = false;
+        inRCharge = false; 
+        for (int i = 0; i < 8; i++)
+        {
+            Instantiate(UltimateSpike, transform.position+UltimateSpawns[0][i],Quaternion.identity);
+        }
+    }
+
     private void TryECast()
     {
         RaycastHit eHit;
         Debug.Log("UWU");
         if (Physics.Raycast(headOb.transform.position, headOb.transform.forward* 200, out eHit, 200,  ECast))
         {
-            EConnectedOb = Instantiate(EJoint, eHit.point, Quaternion.identity);
+            
+            float magPoint = eHit.distance;
+            Vector3 eConPoint = headOb.transform.forward * magPoint;
+            EConnectedOb = Instantiate(EJoint, transform.position + eConPoint,headOb.transform.rotation);
             cEarthGrabbed = eHit.transform.GetComponent<CEarth>();
             EConnectedOb.transform.parent = headOb.transform; 
             inEMode = true;
             eHit.transform.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+            eHit.transform.gameObject.GetComponent<Rigidbody>().useGravity = false;
         }
     }
 
     private void MoveGravityWell()
     {
-        float gravityIntensity = Vector3.Distance(EConnectedOb.transform.position, cEarthGrabbed.transform.position);
-        cEarthGrabbed.rb.AddForce((EConnectedOb.transform.position - cEarthGrabbed.transform.position) * gravityIntensity * cEarthGrabbed.rb.mass * gravityPull);
+
+        //float gravityIntensity = Vector3.Distance(EConnectedOb.transform.position, cEarthGrabbed.transform.position + new Vector3(0f, cEarthGrabbed.transform.localScale.y/8, 0f));
+        //float adder = 0;
+        //Debug.Log(gravityIntensity);
+        //if(gravityIntensity < 2)
+        //{
+        //    cEarthGrabbed.rb.velocity = Vector3.zero;
+        //    cEarthGrabbed.rb.angularVelocity = Vector3.zero;
+        //    return;
+        //    //adder += 0.5f;
+        //}
+        //if (gravityIntensity < 10)
+        //{
+        //    adder += 0.5f;
+        //    //adder += 0.5f;
+        //}
+        //Vector3 forceGrav =((EConnectedOb.transform.position - (cEarthGrabbed.transform.position + new Vector3(0f, cEarthGrabbed.transform.localScale.y/8, 0f))) * gravityIntensity * cEarthGrabbed.rb.mass * (gravityPull+ adder));
+        //forceGrav.x = Mathf.Clamp(forceGrav.x, - maximumPull, maximumPull);
+        //forceGrav.y = Mathf.Clamp(forceGrav.y, -maximumPull, maximumPull);
+        //forceGrav.z = Mathf.Clamp(forceGrav.z, -maximumPull, maximumPull);
+        //cEarthGrabbed.rb.AddForce(forceGrav);
+
+        //cEarthGrabbed.transform.position = Vector3.MoveTowards(cEarthGrabbed.transform.position, EConnectedOb.transform.position, gravityIntensity/2);
+        //cEarthGrabbed.rb.MovePosition(EConnectedOb.transform.position);
+        Vector3 CMove = EConnectedOb.transform.position - (cEarthGrabbed.transform.position ); 
+        CMove = CMove.normalized;
+        CMove = CMove * (cEarthGrabbed.transform.localScale.y + 1000);
+        cEarthGrabbed.rb.AddForce(CMove);
     }
 
     private void CreateNewWall(Vector3 _position, Quaternion _direction)
