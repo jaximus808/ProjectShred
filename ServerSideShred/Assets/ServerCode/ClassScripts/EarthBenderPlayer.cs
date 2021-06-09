@@ -16,8 +16,12 @@ public class EarthBenderPlayer : MonoBehaviour
     public int qAddCap;
     public float setTimerC;
     public float raiseRate;
+    public float setTimerE;
     public Transform groundCheck;
+    public float gravityPull; 
+
     [SerializeField] private CharacterController controller;
+    [SerializeField] private GameObject EJoint;
 
     [SerializeField] private GameObject NormalAttackGameOb;
     [SerializeField] private Transform NormalAttackSpawn;
@@ -32,6 +36,10 @@ public class EarthBenderPlayer : MonoBehaviour
     [SerializeField] private Transform qAim;
 
     [SerializeField] private LayerMask PlayerLayer;
+    [SerializeField] private LayerMask ECast;
+
+    private GameObject EConnectedOb;
+    private CEarth cEarthGrabbed; 
 
     private float yVelocity = 0;
     private bool[] inputs;
@@ -42,12 +50,15 @@ public class EarthBenderPlayer : MonoBehaviour
     private bool inQProc = false;
     private bool canC = true;
     private bool raising = false;
+    private bool canE = true;
     private int[] idQs = { 0, 0, 0, 0, 0 };
+    private bool inEMode = false;
 
     private float timerNorm = 0f;
     private float timerQ = 0f;
     private float timerQAdd = 0f;
     private float timerC = 0f;
+    private float timerE = 0f;
 
     private int currCWall = 0;
     private int QTotalAdd = 0;
@@ -56,6 +67,7 @@ public class EarthBenderPlayer : MonoBehaviour
     {
         //idQs = new int[] { 0,0,0,0,0};
         timerC = setTimerC;
+        timerE = setTimerE;
         timerNorm = setTimerNorm;
         timerQ = setTimerQ;
         canNormalAtk = true;
@@ -69,7 +81,7 @@ public class EarthBenderPlayer : MonoBehaviour
         //id = _id;
         //username = _username;
         player = _player;
-        inputs = new bool[8];
+        inputs = new bool[9];
     }
 
     /// <summary>Processes player input and moves the player.</summary>
@@ -98,6 +110,27 @@ public class EarthBenderPlayer : MonoBehaviour
         }
         Move(_inputDirection);
         
+        if(inputs[8] && canE&& !inEMode)
+        {
+            TryECast();
+        }
+        else if(inputs[8] && canE && inEMode)
+        {
+            MoveGravityWell();
+        }
+        else if(canE && inEMode)
+        {
+            canE = false;
+            inEMode = false; 
+
+        }
+        else if(!canE)
+        {
+            timerE -= Time.fixedDeltaTime;
+            if (timerE <= 0) { timerE = setTimerE; canE = true; }
+        }
+        
+
         if (canQ && inputs[6])
         {
             //canQ = false;
@@ -192,6 +225,26 @@ public class EarthBenderPlayer : MonoBehaviour
                 canC = true;
             }
         }
+    }
+
+    private void TryECast()
+    {
+        RaycastHit eHit;
+        Debug.Log("UWU");
+        if (Physics.Raycast(headOb.transform.position, headOb.transform.forward* 200, out eHit, 200,  ECast))
+        {
+            EConnectedOb = Instantiate(EJoint, eHit.point, Quaternion.identity);
+            cEarthGrabbed = eHit.transform.GetComponent<CEarth>();
+            EConnectedOb.transform.parent = headOb.transform; 
+            inEMode = true;
+            eHit.transform.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+        }
+    }
+
+    private void MoveGravityWell()
+    {
+        float gravityIntensity = Vector3.Distance(EConnectedOb.transform.position, cEarthGrabbed.transform.position);
+        cEarthGrabbed.rb.AddForce((EConnectedOb.transform.position - cEarthGrabbed.transform.position) * gravityIntensity * cEarthGrabbed.rb.mass * gravityPull);
     }
 
     private void CreateNewWall(Vector3 _position, Quaternion _direction)

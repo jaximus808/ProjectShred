@@ -47,6 +47,7 @@ public class UIManager : MonoBehaviour
         ClientSend.WelcomeReceived(_id);
         Cam.SetActive(false);
         ClassSelection.SetActive(false);
+        
     }
 
 
