@@ -106,6 +106,7 @@ public class ServerSend
             _packet.Write(_player.username);
             _packet.Write(_player.transform.position);
             _packet.Write(_player.transform.rotation);
+            _packet.Write(_player.setHp);
 
             SendTCPData(_toClient, _packet);
         }

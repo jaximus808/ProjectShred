@@ -479,6 +479,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectiles: 4
+  localPlayer: {fileID: 0}
   localPlayerPrefab: {fileID: 5249216878928436357, guid: 1045460d9c8f0584ca3fb1cd9a74cc40, type: 3}
   playerPrefab: {fileID: 6558651169813403767, guid: d407dbd8ca8ac1e41bc4fb249acb55bb, type: 3}
   localEarthPlayerPrefab: {fileID: 5885737545435903262, guid: 97705dcb3ab3e9a45acbdd421db7b605, type: 3}

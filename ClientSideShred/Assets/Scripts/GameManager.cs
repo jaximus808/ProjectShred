@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
 
     public static Dictionary<int, Dictionary<int, GameObject>> Projectiles = new Dictionary<int, Dictionary<int, GameObject>>();
 
+    public PlayerManager localPlayer; 
+
     public GameObject localPlayerPrefab;
     public GameObject playerPrefab;
 
@@ -45,7 +47,7 @@ public class GameManager : MonoBehaviour
     /// <param name="_name">The player's name.</param>
     /// <param name="_position">The player's starting position.</param>
     /// <param name="_rotation">The player's starting rotation.</param>
-    public void SpawnPlayer(int _id, string _username, Vector3 _position, Quaternion _rotation, int _classId)
+    public void SpawnPlayer(int _id, string _username, Vector3 _position, Quaternion _rotation, int _classId, int _hp)
     {
         PlayerManager _player;
         if (_id == Client.instance.myId)
@@ -58,6 +60,14 @@ public class GameManager : MonoBehaviour
                 default:
                     _player = Instantiate(localPlayerPrefab, _position, _rotation).GetComponent<PlayerManager>();
                     break;
+            }
+            localPlayer = _player;
+            foreach(KeyValuePair<int, PlayerManager> player in players)
+            {
+                if(player.Value.id != _id)
+                {
+                    player.Value.bill.SetCam();
+                }
             }
             //_player = Instantiate(localPlayerPrefab, _position, _rotation);
         }
@@ -77,6 +87,7 @@ public class GameManager : MonoBehaviour
 
         _player.id = _id;
         _player.username = _username;
+        _player.SetMaxHeath(_hp);
         players.Add(_id, _player);
     }
     

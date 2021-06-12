@@ -7,6 +7,7 @@ public class EarthBenderPlayer : MonoBehaviour
 {
     public int id;
     public string username;
+    public int setHp; 
     public float gravity = -9.81f;
     public float moveSpeed = 5f;
     public float jumpSpeed = 5f;
@@ -50,6 +51,8 @@ public class EarthBenderPlayer : MonoBehaviour
 
     private Dictionary<int, Dictionary<int, Vector3>> UltimateSpawns = new Dictionary<int, Dictionary<int, Vector3>>();
 
+
+
     private string eState = "none";
     private bool canR = true;
     private bool inRCharge = false;
@@ -66,6 +69,7 @@ public class EarthBenderPlayer : MonoBehaviour
     private bool canE = true;
     private int[] idQs = { 0, 0, 0, 0, 0 };
     private bool inEMode = false;
+    private int HealthPoints;
 
     private float timerNorm = 0f;
     private float timerQ = 0f;
@@ -96,13 +100,16 @@ public class EarthBenderPlayer : MonoBehaviour
         UltimateSpawns.Add(2, new Dictionary<int, Vector3>());
     }
 
-    public void Initialize(Player _player)
+    public int Initialize(Player _player)
     {
         //id = _id;
         //username = _username;
         player = _player;
         inputs = new bool[12];
+        return setHp;
     }
+
+    
 
     /// <summary>Processes player input and moves the player.</summary>
     public void FixedUpdate()
@@ -134,6 +141,7 @@ public class EarthBenderPlayer : MonoBehaviour
         {
             if(timerRAdd <= 0 )
             {
+                Debug.Log(ultLayer);
                 if(ultLayer < 3)
                 {
                     timerRAdd = setRAddTimer;
@@ -158,6 +166,7 @@ public class EarthBenderPlayer : MonoBehaviour
             {
                 timerR = setTimerR;
                 canR = true;
+
             }
         }
         if (inRCharge) return;
@@ -318,10 +327,10 @@ public class EarthBenderPlayer : MonoBehaviour
 
     private void CommenceRCharge()
     {
-        Debug.Log("BRO");
         inRCharge = true;
-        ultLayer++; 
-        
+        ultLayer++;
+        Debug.Log("RADDED");
+        //should add client side rendering of aoe
         for (int i = 0; i < 8*ultLayer; i++)
         {
             UltimateSpawns[ultLayer - 1].Add(i, new Vector3(Mathf.Cos((Mathf.PI / (4f * ultLayer)) * (i + 1)) * (radiusOfUlt*ultLayer), transform.position.y, Mathf.Sin((Mathf.PI / (4f * ultLayer)) * (i + 1)) * radiusOfUlt * ultLayer));
@@ -341,9 +350,12 @@ public class EarthBenderPlayer : MonoBehaviour
                 REarth _rEarth = Instantiate(UltimateSpike, transform.position + UltimateSpawns[i-1][y], Quaternion.identity).GetComponent<REarth>();
                 renderServerUlt(_rEarth, transform.position + UltimateSpawns[i - 1][y], Quaternion.identity);
             }
+            UltimateSpawns[i-1].Clear();
         }
-        
-        
+        ultLayer = 0;
+        timerRAdd = 0;
+
+
     }
 
     private void renderServerUlt(REarth _rEarth, Vector3 _position, Quaternion _rotation)

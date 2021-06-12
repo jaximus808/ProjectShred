@@ -6,7 +6,8 @@ public class Player : MonoBehaviour
 {
     public int classId;
     public int id;
-    public string username; 
+    public string username;
+    public int setHp;
     public EarthBenderPlayer earthPlayer;
 
     public void StartDataToClass(int _id, string _username)
@@ -16,7 +17,7 @@ public class Player : MonoBehaviour
         switch (classId)
         {
             case 0:
-                earthPlayer.Initialize(this);
+                setHp = earthPlayer.Initialize(this);
                 break;
         }
     }

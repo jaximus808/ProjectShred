@@ -1,6 +1,7 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
+    - BillBoard
     - CameraController
     - Client
     - EarthController
@@ -22,6 +23,7 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.GraphicRaycaster
     - UnityEngine.UI.Image
     - UnityEngine.UI.InputField
+    - UnityEngine.UI.Slider
     - UnityEngine.UI.Text
   sceneClasses:
     Assets/Game.unity:
@@ -56,7 +58,9 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1486}
+      Script: {instanceID: 1422}
+    - Class: 114
+      Script: {instanceID: 1488}
     - Class: 114
       Script: {instanceID: 2014}
     - Class: 114
@@ -86,7 +90,7 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 3468}
     - Class: 114
-      Script: {instanceID: 3600}
+      Script: {instanceID: 17136}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -108,6 +112,12 @@ ScriptsOnlyBuild:
     - Class: 258
       Script: {instanceID: 0}
   scriptHashData:
+  - hash:
+      serializedVersion: 2
+      Hash: 21a9c6dbf300fc1f6dc15ca7e2c39a37
+    assemblyName: UnityEngine.UI.dll
+    namespaceName: UnityEngine.UI
+    className: Slider
   - hash:
       serializedVersion: 2
       Hash: 5ab533713adae59372fb3e10a585c186
@@ -174,12 +184,6 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: VerticalLayoutGroup
-  - hash:
-      serializedVersion: 2
-      Hash: 21a9c6dbf300fc1f6dc15ca7e2c39a37
-    assemblyName: UnityEngine.UI.dll
-    namespaceName: UnityEngine.UI
-    className: Slider
   - hash:
       serializedVersion: 2
       Hash: 3164bc883ff663a5cdb32d1ef7e7c0c5
@@ -278,7 +282,7 @@ ScriptsOnlyBuild:
     className: EarthController
   - hash:
       serializedVersion: 2
-      Hash: 19ce4d990b36c942bc272650aa89dc85
+      Hash: c743d8d8d6b9dfecb3ae68891bb32709
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PlayerManager
@@ -398,7 +402,7 @@ ScriptsOnlyBuild:
     className: TMP_Settings
   - hash:
       serializedVersion: 2
-      Hash: 0072cb69ff61e27cbb5b0decde7b967a
+      Hash: 0248d8fe914405b91409305de39943f8
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameManager
@@ -582,6 +586,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TextContainer
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: BillBoard
   platform: 5
   scenePathNames:
   - Assets/Game.unity

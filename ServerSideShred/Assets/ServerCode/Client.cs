@@ -239,6 +239,12 @@ public class Client
             ServerSend.CreateProjectile(2, _curNormAtk.id, _curNormAtk.transform.position, _curNormAtk.transform.rotation, true, id);
             ServerSend.RaiseEarthWall(_curNormAtk.id, _curNormAtk.transform.localScale);
         }
+        foreach (REarth _curNormAtk in NetworkManager.UltEarth.Values)
+        {
+
+            ServerSend.CreateProjectile(3, _curNormAtk.id, _curNormAtk.transform.position, _curNormAtk.transform.rotation, true, id);
+            ServerSend.RaiseEarthWall(_curNormAtk.id, _curNormAtk.transform.localScale);
+        }
         Debug.Log("Shoot");
     }
 
