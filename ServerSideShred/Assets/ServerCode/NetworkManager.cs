@@ -13,6 +13,9 @@ public class NetworkManager : MonoBehaviour
 
     //public static Dictionary<int, PositionObject> PeningEathQ = new Dictionary<int, PositionObject>();
 
+    public Transform RespawnPoint;
+    public float rangeRespawn;
+
     public GameObject playerPrefab;
     public GameObject playerEarthPrefab;
 

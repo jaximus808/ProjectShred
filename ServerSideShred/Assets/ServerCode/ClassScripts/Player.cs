@@ -9,6 +9,12 @@ public class Player : MonoBehaviour
     public string username;
     public int setHp;
     public EarthBenderPlayer earthPlayer;
+    public int curHp;
+
+    private void Start()
+    {
+        curHp = setHp;
+    }
 
     public void StartDataToClass(int _id, string _username)
     {
@@ -20,6 +26,7 @@ public class Player : MonoBehaviour
                 setHp = earthPlayer.Initialize(this);
                 break;
         }
+        
     }
 
     public void SendInput(bool[] _inputs,Quaternion _rotation,Quaternion _headRotation)
@@ -39,6 +46,22 @@ public class Player : MonoBehaviour
             case 0:
                 earthPlayer.Disconnect();
                 break;
+        }
+    }
+
+    public void ApplyDamage(int Damage)
+    {
+        curHp -= Damage;
+        ServerSend.UpdateHealth(id, curHp);
+        if(curHp <= 0)
+        {
+            Debug.Log("?????");
+            switch (classId)
+            {
+                case 0:
+                    earthPlayer.Respawn();
+                    break;
+            }
         }
     }
 }

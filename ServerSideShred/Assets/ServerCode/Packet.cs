@@ -15,6 +15,7 @@ public enum ServerPackets
     createProjectile,
     updateProjectile,
     raiseEarthWall,
+    updateHealth
 }
 
 /// <summary>Sent from client to server.</summary>

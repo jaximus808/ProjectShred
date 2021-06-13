@@ -74,11 +74,19 @@ public class ClientHandle : MonoBehaviour
         Vector3 _newScale = _packet.ReadVector3();
         if (!GameManager.Projectiles[2].ContainsKey(_wallId)) return;
         GameManager.Projectiles[2][_wallId].transform.localScale = _newScale;
+       
+    }
+
+    public static void UpdateHealth(Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        int _curHp = _packet.ReadInt();
+        GameManager.players[_id].UpdateHealth(_curHp);
+        
     }
 
     public static void PlayerDisconnect(Packet _packet)
     {
-        Debug.Log("recievied");
         int _id = _packet.ReadInt();
         Destroy(GameManager.players[_id].gameObject);
         GameManager.players.Remove(_id);

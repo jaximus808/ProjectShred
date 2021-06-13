@@ -306,7 +306,8 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.playerDisconnected, ClientHandle.PlayerDisconnect },
             { (int)ServerPackets.createProjectile, ClientHandle.CreateProjectile},
             { (int)ServerPackets.updateProjectile, ClientHandle.UpdateProjectile},
-            { (int)ServerPackets.raiseEarthWall, ClientHandle.RaiseEarthWall}
+            { (int)ServerPackets.raiseEarthWall, ClientHandle.RaiseEarthWall},
+            { (int)ServerPackets.updateHealth, ClientHandle.UpdateHealth}
         };
         Debug.Log("Initialized packets.");
     }

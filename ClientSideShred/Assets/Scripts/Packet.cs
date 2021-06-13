@@ -14,7 +14,8 @@ public enum ServerPackets
     playerDisconnected,
     createProjectile,
     updateProjectile,
-    raiseEarthWall
+    raiseEarthWall,
+    updateHealth
 }
 
 /// <summary>Sent from client to server.</summary>

@@ -7,10 +7,17 @@ public class QEarth : MonoBehaviour
     // Start is called before the first frame update
     public int id;
     public bool pending = false;
+    public int damage;
 
     public Transform spawnPoint;
     public Transform head;
     public Rigidbody rb;
+
+    public GameObject parentPlayer;
+
+    private Player hitPlayer;
+    private GameObject hitOb;
+
     // Update is called once per frame
     private void FixedUpdate()
     {
@@ -22,5 +29,28 @@ public class QEarth : MonoBehaviour
             transform.rotation = head.rotation;
         }
         //ServerSend.updateEarthNorm(id, transform.position, transform.rotation);
+    }
+
+    private void OnCollisionEnter(Collision _collision)
+    {
+        Debug.Log(_collision.transform.gameObject.layer);
+        if (_collision.transform.gameObject.layer == 8 && _collision.transform.gameObject != parentPlayer)
+        {
+            Debug.Log(_collision.transform.gameObject.name);
+            if (_collision.transform.gameObject == hitOb)
+            {
+                if (rb.velocity.magnitude < 20f) return; 
+                hitPlayer.ApplyDamage(damage);
+            }
+            else
+            {
+                if (rb.velocity.magnitude < 20f) return;
+                hitPlayer = _collision.transform.GetComponent<Player>();
+                hitOb = _collision.transform.gameObject;
+                hitPlayer.ApplyDamage(damage);
+
+            }
+        }
+
     }
 }

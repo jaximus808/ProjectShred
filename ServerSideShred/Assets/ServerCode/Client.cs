@@ -237,7 +237,13 @@ public class Client
         {
 
             ServerSend.CreateProjectile(2, _curNormAtk.id, _curNormAtk.transform.position, _curNormAtk.transform.rotation, true, id);
+            
+        }
+        foreach (CEarth _curNormAtk in NetworkManager.EarthCScale.Values)
+        {
+
             ServerSend.RaiseEarthWall(_curNormAtk.id, _curNormAtk.transform.localScale);
+
         }
         foreach (REarth _curNormAtk in NetworkManager.UltEarth.Values)
         {

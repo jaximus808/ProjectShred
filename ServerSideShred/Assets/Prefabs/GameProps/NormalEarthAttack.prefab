@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5818794951120462966}
   - component: {fileID: 7856343330197349945}
   - component: {fileID: 99393936571168396}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 5680306863836414471}
   - component: {fileID: 1119123430276979406}
   - component: {fileID: 8017372302116465878}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: NormalEarthAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,6 +141,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
+  damage: 20
+  rb: {fileID: 8017372302116465878}
+  parentPlayer: {fileID: 0}
 --- !u!54 &8017372302116465878
 Rigidbody:
   m_ObjectHideFlags: 0

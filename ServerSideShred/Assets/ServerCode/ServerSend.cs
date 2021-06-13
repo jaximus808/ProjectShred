@@ -179,6 +179,15 @@ public class ServerSend
         }
     }
 
+    public static void UpdateHealth(int _id, int _curHp)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.updateHealth))
+        {
+            _packet.Write(_id);
+            _packet.Write(_curHp);
+            SendUDPDataToAll(_packet);
+        }
+    }
 
     public static void PlayerDisconnected(int _id)
     {
