@@ -4,6 +4,7 @@ ScriptsOnlyBuild:
     - BillBoard
     - CameraController
     - Client
+    - ClientChatManager
     - EarthController
     - GameManager
     - PlayerManager
@@ -20,11 +21,16 @@ ScriptsOnlyBuild:
     - UnityEngine.EventSystems.StandaloneInputModule
     - UnityEngine.UI.Button
     - UnityEngine.UI.CanvasScaler
+    - UnityEngine.UI.ContentSizeFitter
     - UnityEngine.UI.GraphicRaycaster
     - UnityEngine.UI.Image
     - UnityEngine.UI.InputField
+    - UnityEngine.UI.Mask
+    - UnityEngine.UI.ScrollRect
+    - UnityEngine.UI.Scrollbar
     - UnityEngine.UI.Slider
     - UnityEngine.UI.Text
+    - UnityEngine.UI.VerticalLayoutGroup
   sceneClasses:
     Assets/Game.unity:
     - Class: 1
@@ -62,6 +68,10 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1488}
     - Class: 114
+      Script: {instanceID: 1514}
+    - Class: 114
+      Script: {instanceID: 1674}
+    - Class: 114
       Script: {instanceID: 2014}
     - Class: 114
       Script: {instanceID: 2052}
@@ -72,25 +82,33 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 2210}
     - Class: 114
+      Script: {instanceID: 2352}
+    - Class: 114
       Script: {instanceID: 2400}
+    - Class: 114
+      Script: {instanceID: 2540}
     - Class: 114
       Script: {instanceID: 2622}
     - Class: 114
       Script: {instanceID: 2680}
     - Class: 114
-      Script: {instanceID: 2802}
+      Script: {instanceID: 2798}
     - Class: 114
-      Script: {instanceID: 2814}
+      Script: {instanceID: 2804}
     - Class: 114
-      Script: {instanceID: 2882}
+      Script: {instanceID: 2816}
     - Class: 114
-      Script: {instanceID: 3028}
+      Script: {instanceID: 2884}
     - Class: 114
-      Script: {instanceID: 3096}
+      Script: {instanceID: 3030}
     - Class: 114
-      Script: {instanceID: 3338}
+      Script: {instanceID: 3098}
     - Class: 114
-      Script: {instanceID: 3470}
+      Script: {instanceID: 3340}
+    - Class: 114
+      Script: {instanceID: 3354}
+    - Class: 114
+      Script: {instanceID: 3472}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -348,7 +366,7 @@ ScriptsOnlyBuild:
     className: RawImage
   - hash:
       serializedVersion: 2
-      Hash: a393e1d85ad3d56e5c48c9a58cc2d806
+      Hash: e8a028ce3383488906d53c9718778a99
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Client
@@ -408,7 +426,7 @@ ScriptsOnlyBuild:
     className: TMP_Settings
   - hash:
       serializedVersion: 2
-      Hash: 0248d8fe914405b91409305de39943f8
+      Hash: a74689e85ace11cb5678a15dead03014
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameManager
@@ -418,6 +436,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: AspectRatioFitter
+  - hash:
+      serializedVersion: 2
+      Hash: 3d7220d6adab38663486f0081a23f7e8
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ClientChatManager
   - hash:
       serializedVersion: 2
       Hash: cc4274b586df3c02688bac01b88bd16c
@@ -456,7 +480,7 @@ ScriptsOnlyBuild:
     className: TextMeshProUGUI
   - hash:
       serializedVersion: 2
-      Hash: 559de2a12c7b99467c3fe090708f5a2a
+      Hash: a34d3c98fe16f849c5effa22c458f135
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CameraController

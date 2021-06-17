@@ -43,4 +43,11 @@ public class ServerHandle
         Quaternion _headRotation = _packet.ReadQuaternion();
         Server.clients[_fromClient].player.SendInput(_inputs, _rotation, _headRotation);
     }
+    public static void HandleChatMsg(int __fromClient, Packet _packet)
+    {
+        int _clientId = _packet.ReadInt();
+        if (__fromClient != _clientId) return;
+        string _message = _packet.ReadString();
+        Debug.Log($"{Server.clients[__fromClient].player.username} has said {_message}");
+    }
 }

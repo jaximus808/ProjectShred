@@ -24,6 +24,7 @@ public enum ClientPackets
     welcomeReceived = 1,
     initRender,
     playerMovement,
+    sendChatMsg
 }
 
 public class Packet : IDisposable

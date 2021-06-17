@@ -385,7 +385,6 @@ public class EarthBenderPlayer : MonoBehaviour
     private void TryECast()
     {
         RaycastHit eHit;
-        Debug.Log("UWU");
         if (Physics.Raycast(headOb.transform.position, headOb.transform.forward * 200, out eHit, 200, ECast))
         {
             if (eHit.transform.tag == "CWall")
@@ -502,7 +501,6 @@ public class EarthBenderPlayer : MonoBehaviour
             if (hitTrue)
             {
                 NetworkManager.InActionEarthQ[idQs[i]].transform.LookAt(hitPoint);
-                Debug.Log(":)");
             }
 
             NetworkManager.InActionEarthQ[idQs[i]].pending = false;

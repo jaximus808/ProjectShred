@@ -9,7 +9,6 @@ public class BillBoard : MonoBehaviour
 
     public void SetCam ()
     {
-        Debug.Log("uh");
         cam = GameManager.instance.localPlayer.cam;
         aimTowards = true; 
     }

@@ -130,6 +130,7 @@ public class Server
             { (int)ClientPackets.welcomeReceived, ServerHandle.WelcomeReceived },
             { (int)ClientPackets.initRender, ServerHandle.RenderCurrentServerInit },
             { (int)ClientPackets.playerMovement, ServerHandle.PlayerMovement },
+            { (int)ClientPackets.sendChatMsg, ServerHandle.HandleChatMsg },
         };
         Debug.Log("Initialized packets.");
     }

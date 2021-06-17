@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public ClientChatManager ChatMang;
+
     public int projectiles;
     
     public static Dictionary<int, PlayerManager> players = new Dictionary<int, PlayerManager>();

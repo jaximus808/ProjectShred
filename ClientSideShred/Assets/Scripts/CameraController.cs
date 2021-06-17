@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public ClientChatManager clientChat; 
     public PlayerManager player;
     public float sensitivity = 100f;
     public float clampAngle = 85f;
@@ -13,6 +14,7 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
+        clientChat = GameManager.instance.ChatMang;
         if (Cursor.lockState != CursorLockMode.Confined)
         {
             //Going directly from Locked to Confined does not work
@@ -26,17 +28,15 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        Look();
-        Debug.DrawRay(transform.position, transform.forward * 2, Color.red);
-        if(Input.GetKey(KeyCode.BackQuote))
+        if (Input.GetKey(KeyCode.BackQuote))
         {
             Debug.Log(Cursor.lockState);
-            if (Cursor.lockState == CursorLockMode.Confined)
+            if (!Cursor.visible)
             {
                 //Going directly from Locked to Confined does not work
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
-                
+
             }
             else
             {
@@ -44,6 +44,10 @@ public class CameraController : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Confined;
             }
         }
+        if (clientChat.focused || Cursor.visible) return; 
+        Look();
+        Debug.DrawRay(transform.position, transform.forward * 2, Color.red);
+        
     }
 
     private void Look()
