@@ -1,12 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
     public ClientChatManager ChatMang;
+
+    public GameObject ChatContainer;
+
+    public GameObject chatObject;
 
     public int projectiles;
     
@@ -58,6 +63,7 @@ public class GameManager : MonoBehaviour
             {
                 case 0:
                     _player = Instantiate(localEarthPlayerPrefab, _position, _rotation).GetComponent<PlayerManager>();
+                    _player.className = "EarthBender";
                     break;
                 default:
                     _player = Instantiate(localPlayerPrefab, _position, _rotation).GetComponent<PlayerManager>();
@@ -79,6 +85,7 @@ public class GameManager : MonoBehaviour
             {
                 case 0:
                     _player = Instantiate(earthPlayerPrefab, _position, _rotation).GetComponent<PlayerManager>();
+                    _player.className = "EarthBender";
                     break;
                 default:
                     _player = Instantiate(playerPrefab, _position, _rotation).GetComponent<PlayerManager>();
@@ -98,5 +105,14 @@ public class GameManager : MonoBehaviour
     {
         GameObject newProjectile = Instantiate(ProjectilesPrefab[_projectileId], _position, _rotation);
         Projectiles[_projectileId].Add(_id, newProjectile);
+    }
+
+    public void HandleMessage(int _clientId,string _username,string _msg)
+    {
+        chatObject.SetActive(false);
+        GameObject curChat = Instantiate(chatObject, ChatContainer.transform);
+        curChat.GetComponent<Text>().text = $"{_username}({players[_clientId].className}): {_msg}";
+        curChat.transform.SetParent(ChatContainer.transform, false);
+        curChat.SetActive(true);
     }
 }

@@ -300,7 +300,7 @@ ScriptsOnlyBuild:
     className: EarthController
   - hash:
       serializedVersion: 2
-      Hash: c743d8d8d6b9dfecb3ae68891bb32709
+      Hash: 30ceac30b9f2ed2879c717145c53f277
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PlayerManager
@@ -426,7 +426,7 @@ ScriptsOnlyBuild:
     className: TMP_Settings
   - hash:
       serializedVersion: 2
-      Hash: a74689e85ace11cb5678a15dead03014
+      Hash: 6e21b288b7bba688f2f669aa8e49bbc7
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameManager

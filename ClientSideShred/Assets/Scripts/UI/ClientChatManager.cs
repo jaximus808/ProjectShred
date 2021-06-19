@@ -18,6 +18,10 @@ public class ClientChatManager : MonoBehaviour
     private float setRetTimer = 0.5f;
     private float curRetTimer = 0;
 
+    private bool canEsc = true;
+    private float setEscTimer = 0.5f;
+    private float curEscTimer = 0f;
+
     private void Update()
     {
         Timers();
@@ -60,7 +64,14 @@ public class ClientChatManager : MonoBehaviour
         //}
         if(Input.GetKey(KeyCode.Return)&&canRet)
         {
-            ClientSend.SendChatMessage(chatInput.text);
+            if(chatInput.text != "") ClientSend.SendChatMessage(chatInput.text);
+            canRet = false;
+            chatInput.text = "";
+            focused = false;
+            chatInput.interactable = false;
+        }
+        if(Input.GetKey(KeyCode.Escape) && canEsc)
+        {
             canRet = false;
             chatInput.text = "";
             focused = false;
@@ -86,6 +97,15 @@ public class ClientChatManager : MonoBehaviour
             {
                 canRet = true;
                 curRetTimer = 0;
+            }
+        }
+        if (!canEsc)
+        {
+            curEscTimer += Time.deltaTime;
+            if (curEscTimer > setEscTimer)
+            {
+                canEsc = true;
+                curEscTimer = 0;
             }
         }
     }

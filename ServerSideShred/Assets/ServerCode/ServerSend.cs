@@ -198,6 +198,16 @@ public class ServerSend
         }
     }
 
-    
+    public static void RenderMessage(int _id,string _user, string _message)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.rendMessage))
+        {
+            _packet.Write(_id);
+            _packet.Write(_user);
+            _packet.Write(_message);
+            SendUDPDataToAll(_packet);
+        }
+    }
+
     #endregion
 }

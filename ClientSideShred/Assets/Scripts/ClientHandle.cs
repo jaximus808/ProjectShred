@@ -91,4 +91,13 @@ public class ClientHandle : MonoBehaviour
         Destroy(GameManager.players[_id].gameObject);
         GameManager.players.Remove(_id);
     }
+
+    public static void RenderMessage(Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        string _user = _packet.ReadString();
+        string _msg = _packet.ReadString();
+        GameManager.instance.HandleMessage(_id, _user, _msg);
+    }
+
 }

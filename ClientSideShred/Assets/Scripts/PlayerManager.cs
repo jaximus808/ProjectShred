@@ -12,7 +12,7 @@ public class PlayerManager : MonoBehaviour
 
     public int id;
     public string username;
-
+    public string className; 
 
     public void SetMaxHeath(int _health)
     {
