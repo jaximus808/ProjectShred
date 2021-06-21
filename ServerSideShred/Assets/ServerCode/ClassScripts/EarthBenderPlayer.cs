@@ -45,6 +45,8 @@ public class EarthBenderPlayer : MonoBehaviour
     [SerializeField] private LayerMask PlayerLayer;
     [SerializeField] private LayerMask ECast;
 
+    [SerializeField] private float normalAtkForce;
+
     private GameObject EConnectedOb;
     private CEarth cEarthGrabbed;
     private REarth rEarthGrabbed;
@@ -189,7 +191,7 @@ public class EarthBenderPlayer : MonoBehaviour
                     Destroy(EConnectedOb);
                     break;
                 case "RUlt":
-                    rEarthGrabbed.rb.AddForce(headOb.transform.forward * (EForce + rEarthGrabbed.transform.localScale.y));
+                    rEarthGrabbed.rb.AddForce(headOb.transform.forward * (EForce + rEarthGrabbed.transform.localScale.y)*3);
                     rEarthGrabbed.rb.useGravity = true;
                     Destroy(EConnectedOb);
                     break;
@@ -198,7 +200,7 @@ public class EarthBenderPlayer : MonoBehaviour
             canE = false;
             inEMode = false;
             canNormalAtk = false;
-            timerNorm = setTimerNorm + 3;
+            timerNorm = 1;
         }
         else if (inputs[8] && canE && inEMode)
         {
@@ -278,7 +280,6 @@ public class EarthBenderPlayer : MonoBehaviour
         if (canNormalAtk && inputs[5] && !inEMode)
         {
             canNormalAtk = false;
-            Debug.Log("Fire!");
             ShootNormalAttack();
             //shoot soemthing
         }
@@ -303,7 +304,7 @@ public class EarthBenderPlayer : MonoBehaviour
 
             raising = true;
             Quaternion direction = Quaternion.FromToRotation(hit.transform.up, hit.normal);
-            CreateNewWall(hit.point, direction);
+            CreateNewWall(hit.point, direction,hit.transform);
             //raising
         }
         else if (inputs[7] && raising)
@@ -333,11 +334,10 @@ public class EarthBenderPlayer : MonoBehaviour
     {
         inRCharge = true;
         ultLayer++;
-        Debug.Log("RADDED");
         //should add client side rendering of aoe
         for (int i = 0; i < 8 * ultLayer; i++)
         {
-            UltimateSpawns[ultLayer - 1].Add(i, new Vector3(Mathf.Cos((Mathf.PI / (4f * ultLayer)) * (i + 1)) * (radiusOfUlt * ultLayer), transform.position.y, Mathf.Sin((Mathf.PI / (4f * ultLayer)) * (i + 1)) * radiusOfUlt * ultLayer));
+            UltimateSpawns[ultLayer - 1].Add(i, new Vector3(Mathf.Cos((Mathf.PI / (4f * ultLayer)) * (i + 1)) * (radiusOfUlt * ultLayer), 0f, Mathf.Sin((Mathf.PI / (4f * ultLayer)) * (i + 1)) * radiusOfUlt * ultLayer));
         }
     }
 
@@ -351,7 +351,7 @@ public class EarthBenderPlayer : MonoBehaviour
         {
             for (int y = 0; y < 8 * i; y++)
             {
-                REarth _rEarth = Instantiate(UltimateSpike, transform.position + UltimateSpawns[i - 1][y], Quaternion.identity).GetComponent<REarth>();
+                REarth _rEarth = Instantiate(UltimateSpike, new Vector3(transform.position.x + UltimateSpawns[i - 1][y].x,transform.position.y,transform.position.z + UltimateSpawns[i - 1][y].z), Quaternion.identity).GetComponent<REarth>();
                 renderServerUlt(_rEarth, transform.position + UltimateSpawns[i - 1][y], Quaternion.identity);
             }
             UltimateSpawns[i - 1].Clear();
@@ -396,8 +396,19 @@ public class EarthBenderPlayer : MonoBehaviour
                 cEarthGrabbed = eHit.transform.GetComponent<CEarth>();
                 EConnectedOb.transform.parent = headOb.transform;
                 inEMode = true;
-                eHit.transform.gameObject.GetComponent<Rigidbody>().isKinematic = false;
-                eHit.transform.gameObject.GetComponent<Rigidbody>().useGravity = false;
+                GameObject parentOb;
+                if(cEarthGrabbed.child)
+                {
+                    parentOb = cEarthGrabbed.headParent;
+                    cEarthGrabbed = parentOb.GetComponent<CEarth>();
+                }
+                else
+                {
+                    parentOb = eHit.transform.gameObject; 
+                }
+                parentOb.GetComponent<Rigidbody>().isKinematic = false;
+                parentOb.GetComponent<Rigidbody>().useGravity = false;
+                Debug.Log("boom");
             }
             if (eHit.transform.tag == "RUlt")
             {
@@ -418,29 +429,6 @@ public class EarthBenderPlayer : MonoBehaviour
     private void MoveGravityWell()
     {
 
-        //float gravityIntensity = Vector3.Distance(EConnectedOb.transform.position, cEarthGrabbed.transform.position + new Vector3(0f, cEarthGrabbed.transform.localScale.y/8, 0f));
-        //float adder = 0;
-        //Debug.Log(gravityIntensity);
-        //if(gravityIntensity < 2)
-        //{
-        //    cEarthGrabbed.rb.velocity = Vector3.zero;
-        //    cEarthGrabbed.rb.angularVelocity = Vector3.zero;
-        //    return;
-        //    //adder += 0.5f;
-        //}
-        //if (gravityIntensity < 10)
-        //{
-        //    adder += 0.5f;
-        //    //adder += 0.5f;
-        //}
-        //Vector3 forceGrav =((EConnectedOb.transform.position - (cEarthGrabbed.transform.position + new Vector3(0f, cEarthGrabbed.transform.localScale.y/8, 0f))) * gravityIntensity * cEarthGrabbed.rb.mass * (gravityPull+ adder));
-        //forceGrav.x = Mathf.Clamp(forceGrav.x, - maximumPull, maximumPull);
-        //forceGrav.y = Mathf.Clamp(forceGrav.y, -maximumPull, maximumPull);
-        //forceGrav.z = Mathf.Clamp(forceGrav.z, -maximumPull, maximumPull);
-        //cEarthGrabbed.rb.AddForce(forceGrav);
-
-        //cEarthGrabbed.transform.position = Vector3.MoveTowards(cEarthGrabbed.transform.position, EConnectedOb.transform.position, gravityIntensity/2);
-        //cEarthGrabbed.rb.MovePosition(EConnectedOb.transform.position);
         switch (eState)
         {
             case "CWall":
@@ -459,11 +447,29 @@ public class EarthBenderPlayer : MonoBehaviour
 
     }
 
-    private void CreateNewWall(Vector3 _position, Quaternion _direction)
+    private void CreateNewWall(Vector3 _position, Quaternion _direction, Transform _hitOb)
     {
         //amke wall object vertices change later some how 
         CEarth curScalingWall = Instantiate(WallObject, _position, _direction).GetComponent<CEarth>();
+        Debug.Log(_direction);
+        if(_hitOb.tag == "CWall")
+        {
+            //curScalingWall.transform.SetParent(_hitOb.transform);
+            curScalingWall.transform.parent = _hitOb;
+            //Destroy(curScalingWall.GetComponent<Rigidbody>());
+            CEarth _parentOb = _hitOb.GetComponent<CEarth>();
+            if (_parentOb.child)
+            {
+                curScalingWall.headParent = _parentOb.headParent;
+            }
+            else
+            {
+                curScalingWall.headParent = _hitOb.gameObject; 
+            }
 
+            Destroy(curScalingWall.rb);
+            curScalingWall.child = true; 
+        }
         int[] _keyArrayEarthC = NetworkManager.EarthCScale.Keys.ToArray();
         if (_keyArrayEarthC.Length == 0)
         {
@@ -531,7 +537,7 @@ public class EarthBenderPlayer : MonoBehaviour
         idQs[QTotalAdd - 1] = _atkId;
         currQEarthAtk.id = _atkId;
         NetworkManager.InActionEarthQ.Add(_atkId, currQEarthAtk);
-        Debug.Log($"NewQ: {NetworkManager.InActionEarthQ[_atkId].id}");
+        //Debug.Log($"NewQ: {NetworkManager.InActionEarthQ[_atkId].id}");
         ServerSend.CreateProjectile(1, _atkId, spawnPos.position, currQEarthAtk.transform.rotation, false, 0);
     }
 
@@ -539,7 +545,7 @@ public class EarthBenderPlayer : MonoBehaviour
     {
         NormalEarthAttack currentEarthAttack = Instantiate(NormalAttackGameOb, NormalAttackSpawn.position, headOb.transform.rotation).GetComponent<NormalEarthAttack>();
         currentEarthAttack.parentPlayer = gameObject;
-        currentEarthAttack.GetComponent<Rigidbody>().AddForce(currentEarthAttack.transform.forward * 1000, ForceMode.Impulse);
+        currentEarthAttack.GetComponent<Rigidbody>().AddForce(currentEarthAttack.transform.forward * normalAtkForce, ForceMode.Impulse);
         int[] _keyArrayEarth = NetworkManager.NormalEarthAttacks.Keys.ToArray();
         if (_keyArrayEarth.Length == 0)
         {
@@ -551,7 +557,7 @@ public class EarthBenderPlayer : MonoBehaviour
         int _atkId = _keyArrayEarth[_keyArrayEarth.Length - 1] + 1;
         currentEarthAttack.id = _atkId;
         NetworkManager.NormalEarthAttacks.Add(_atkId, currentEarthAttack);
-        Debug.Log($"Bruh: {NetworkManager.NormalEarthAttacks[_atkId].id}");
+        //Debug.Log($"Bruh: {NetworkManager.NormalEarthAttacks[_atkId].id}");
         ServerSend.CreateProjectile(0, _atkId, NormalAttackSpawn.position, currentEarthAttack.transform.rotation, false, 0);
     }
 
@@ -603,7 +609,6 @@ public class EarthBenderPlayer : MonoBehaviour
     public void Respawn()
     {
         //Debug.Log(new Vector3(NetworkManager.instance.RespawnPoint.position.x + Random.Range(-NetworkManager.instance.rangeRespawn, NetworkManager.instance.rangeRespawn), NetworkManager.instance.RespawnPoint.position.y, NetworkManager.instance.RespawnPoint.position.z + Random.Range(-NetworkManager.instance.rangeRespawn, NetworkManager.instance.rangeRespawn)));
-        Debug.Log("?");
         controller.enabled = false;
         controller.transform.position = new Vector3(NetworkManager.instance.RespawnPoint.position.x + Random.Range(-NetworkManager.instance.rangeRespawn, NetworkManager.instance.rangeRespawn), NetworkManager.instance.RespawnPoint.position.y, NetworkManager.instance.RespawnPoint.position.z + Random.Range(-NetworkManager.instance.rangeRespawn, NetworkManager.instance.rangeRespawn));
         controller.enabled = true;

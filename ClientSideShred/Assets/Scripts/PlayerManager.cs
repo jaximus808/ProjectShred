@@ -8,7 +8,8 @@ public class PlayerManager : MonoBehaviour
     public Slider slider;
     public Image fill;
     public Transform cam;
-    public BillBoard bill; 
+    public BillBoard bill;
+    public Text usernameDisplay;
 
     public int id;
     public string username;

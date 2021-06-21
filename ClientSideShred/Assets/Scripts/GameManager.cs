@@ -26,11 +26,13 @@ public class GameManager : MonoBehaviour
 
     public GameObject localEarthPlayerPrefab;
     public GameObject earthPlayerPrefab;
-
+    
     //0 = EarthnormalAttack; 1 = EarthQPrefab
-    public GameObject[] ProjectilesPrefab; 
+    public GameObject[] ProjectilesPrefab;
     //public GameObject earthNormalAttackPrefab;
     //public GameObject earthQAttackPrefab;
+
+    private bool localPlyayerIn = false; 
 
     private void Awake()
     {
@@ -75,9 +77,11 @@ public class GameManager : MonoBehaviour
                 if(player.Value.id != _id)
                 {
                     player.Value.bill.SetCam();
+                    player.Value.usernameDisplay.text = player.Value.username;
+                    
                 }
             }
-            //_player = Instantiate(localPlayerPrefab, _position, _rotation);
+            localPlyayerIn = true; 
         }
         else
         {
@@ -91,6 +95,12 @@ public class GameManager : MonoBehaviour
                     _player = Instantiate(playerPrefab, _position, _rotation).GetComponent<PlayerManager>();
                     break;
             }
+            if(localPlyayerIn)
+            {
+                _player.bill.SetCam();
+                _player.usernameDisplay.text = _username;
+            }
+            
             //_player = Instantiate(playerPrefab, _position, _rotation);
         }
 
@@ -109,7 +119,7 @@ public class GameManager : MonoBehaviour
 
     public void HandleMessage(int _clientId,string _username,string _msg)
     {
-        chatObject.SetActive(false);
+        //chatObject.SetActive(false);
         GameObject curChat = Instantiate(chatObject, ChatContainer.transform);
         curChat.GetComponent<Text>().text = $"{_username}({players[_clientId].className}): {_msg}";
         curChat.transform.SetParent(ChatContainer.transform, false);

@@ -434,6 +434,7 @@ MonoBehaviour:
   ECast:
     serializedVersion: 2
     m_Bits: 512
+  normalAtkForce: 2000
 --- !u!143 &6359650146455104341
 CharacterController:
   m_ObjectHideFlags: 0

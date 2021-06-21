@@ -11,6 +11,9 @@ public class CameraController : MonoBehaviour
 
     private float verticalRotation;
     private float horizontalRotation;
+    private bool canPause = true;
+    private float setPauseTimer = 0.5f;
+    private float curPauseTimer = 0f;
 
     private void Start()
     {
@@ -28,9 +31,10 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.BackQuote))
+        Timer();
+        if (Input.GetKey(KeyCode.BackQuote) && canPause)
         {
-            Debug.Log(Cursor.lockState);
+            canPause = false;
             if (!Cursor.visible)
             {
                 //Going directly from Locked to Confined does not work
@@ -62,5 +66,18 @@ public class CameraController : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
         player.transform.rotation = Quaternion.Euler(0f, horizontalRotation, 0f);
+    }
+
+    private void Timer()
+    {
+        if (!canPause)
+        {
+            curPauseTimer += Time.deltaTime;
+            if (curPauseTimer > setPauseTimer)
+            {
+                canPause = true;
+                curPauseTimer = 0;
+            }
+        }
     }
 }

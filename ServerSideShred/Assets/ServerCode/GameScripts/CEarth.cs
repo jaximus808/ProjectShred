@@ -7,9 +7,10 @@ public class CEarth : MonoBehaviour
     public int id;
     public Rigidbody rb;
     public float baseMass;
+    public GameObject headParent; 
 
     public int damage;
-
+    public bool child = false; 
 
     private Player hitPlayer;
     private GameObject hitOb;
@@ -26,7 +27,11 @@ public class CEarth : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        rb.mass = transform.localScale.y + baseMass;
+        if (!child)
+        {
+            rb.mass = transform.localScale.y + baseMass;
+        } 
+        
         if (prevPos == transform.position && preRot == transform.rotation) return;
         ServerSend.UpdateProjectile(2, id, transform.position, transform.rotation);
         prevPos = transform.position;

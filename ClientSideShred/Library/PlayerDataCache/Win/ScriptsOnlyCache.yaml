@@ -66,49 +66,49 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1422}
     - Class: 114
-      Script: {instanceID: 1488}
+      Script: {instanceID: 1424}
     - Class: 114
-      Script: {instanceID: 1514}
+      Script: {instanceID: 1492}
     - Class: 114
-      Script: {instanceID: 1674}
+      Script: {instanceID: 1518}
     - Class: 114
-      Script: {instanceID: 2014}
+      Script: {instanceID: 1678}
     - Class: 114
-      Script: {instanceID: 2052}
+      Script: {instanceID: 2018}
     - Class: 114
-      Script: {instanceID: 2114}
+      Script: {instanceID: 2056}
     - Class: 114
-      Script: {instanceID: 2122}
+      Script: {instanceID: 2118}
     - Class: 114
-      Script: {instanceID: 2210}
+      Script: {instanceID: 2126}
     - Class: 114
-      Script: {instanceID: 2352}
+      Script: {instanceID: 2354}
     - Class: 114
-      Script: {instanceID: 2400}
+      Script: {instanceID: 2402}
     - Class: 114
-      Script: {instanceID: 2540}
+      Script: {instanceID: 2542}
     - Class: 114
-      Script: {instanceID: 2622}
+      Script: {instanceID: 2624}
     - Class: 114
-      Script: {instanceID: 2680}
+      Script: {instanceID: 2682}
     - Class: 114
-      Script: {instanceID: 2798}
+      Script: {instanceID: 2800}
     - Class: 114
-      Script: {instanceID: 2804}
+      Script: {instanceID: 2806}
     - Class: 114
-      Script: {instanceID: 2816}
+      Script: {instanceID: 2818}
     - Class: 114
-      Script: {instanceID: 2884}
+      Script: {instanceID: 2886}
     - Class: 114
-      Script: {instanceID: 3030}
+      Script: {instanceID: 3032}
     - Class: 114
-      Script: {instanceID: 3098}
+      Script: {instanceID: 3100}
     - Class: 114
-      Script: {instanceID: 3340}
+      Script: {instanceID: 3342}
     - Class: 114
-      Script: {instanceID: 3354}
+      Script: {instanceID: 3356}
     - Class: 114
-      Script: {instanceID: 3472}
+      Script: {instanceID: 3474}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -136,6 +136,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: Slider
+  - hash:
+      serializedVersion: 2
+      Hash: 699619b86d9359741a4f58540298c80b
+    assemblyName: UnityEngine.UI.dll
+    namespaceName: UnityEngine.UI
+    className: Text
   - hash:
       serializedVersion: 2
       Hash: 5ab533713adae59372fb3e10a585c186
@@ -300,7 +306,7 @@ ScriptsOnlyBuild:
     className: EarthController
   - hash:
       serializedVersion: 2
-      Hash: 30ceac30b9f2ed2879c717145c53f277
+      Hash: de34d4e9969cc8e754184dc9405519f1
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PlayerManager
@@ -334,12 +340,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_StyleSheet
-  - hash:
-      serializedVersion: 2
-      Hash: 699619b86d9359741a4f58540298c80b
-    assemblyName: UnityEngine.UI.dll
-    namespaceName: UnityEngine.UI
-    className: Text
   - hash:
       serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb

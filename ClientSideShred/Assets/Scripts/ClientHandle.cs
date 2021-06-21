@@ -73,7 +73,7 @@ public class ClientHandle : MonoBehaviour
         int _wallId = _packet.ReadInt();
         Vector3 _newScale = _packet.ReadVector3();
         if (!GameManager.Projectiles[2].ContainsKey(_wallId)) return;
-        GameManager.Projectiles[2][_wallId].transform.localScale = _newScale;
+        GameManager.Projectiles[2][_wallId].transform.localScale = new Vector3(1f, _newScale.y, 1f) ;
        
     }
 

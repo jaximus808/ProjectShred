@@ -144,7 +144,6 @@ MonoBehaviour:
   rb: {fileID: 4495884825629357002}
   baseMass: 50
   damage: 40
-  parentPlayer: {fileID: 0}
 --- !u!54 &4495884825629357002
 Rigidbody:
   m_ObjectHideFlags: 0
