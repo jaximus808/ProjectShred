@@ -30,7 +30,9 @@ public class EarthController : MonoBehaviour
             Input.GetKey(KeyCode.Z),
             Input.GetKey(KeyCode.X),
             Input.GetKey(KeyCode.R),
-            Input.GetKey(KeyCode.M)
+            Input.GetKey(KeyCode.M),
+            Input.GetKey(KeyCode.LeftShift),
+            Input.GetKey(KeyCode.LeftControl)
         };
 
         ClientSend.PlayerMovement(_inputs, cameraRot.rotation);

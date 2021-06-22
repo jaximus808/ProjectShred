@@ -49,16 +49,16 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void ApplyDamage(int Damage)
+    public void ApplyDamage(int Damage, string _casterName)
     {
         curHp -= Damage;
         ServerSend.UpdateHealth(id, curHp);
         if(curHp <= 0)
         {
-            Debug.Log("?????");
             switch (classId)
             {
                 case 0:
+                    ServerSend.RenderMessage(0, "Game", $"{_casterName} has slain {username}", true);
                     earthPlayer.Respawn();
                     break;
             }

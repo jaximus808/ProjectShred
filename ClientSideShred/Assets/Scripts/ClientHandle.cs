@@ -97,7 +97,8 @@ public class ClientHandle : MonoBehaviour
         int _id = _packet.ReadInt();
         string _user = _packet.ReadString();
         string _msg = _packet.ReadString();
-        GameManager.instance.HandleMessage(_id, _user, _msg);
+        bool _console = _packet.ReadBool();
+        GameManager.instance.HandleMessage(_id, _user, _msg,_console);
     }
 
 }

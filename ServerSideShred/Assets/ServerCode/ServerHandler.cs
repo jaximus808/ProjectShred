@@ -49,6 +49,6 @@ public class ServerHandle
         if (__fromClient != _clientId) return;
         string _message = _packet.ReadString();
         Debug.Log($"{Server.clients[__fromClient].player.username} has said {_message}");
-        ServerSend.RenderMessage(_clientId,Server.clients[__fromClient].player.username, _message);
+        ServerSend.RenderMessage(_clientId,Server.clients[__fromClient].player.username, _message, false);
     }
 }

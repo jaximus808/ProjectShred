@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1582011715713384761}
   - component: {fileID: 3761149000070333476}
   - component: {fileID: 6109838511920594840}
+  - component: {fileID: 3933465734493173914}
   m_Layer: 7
   m_Name: QProtoModel
   m_TagString: Untagged
@@ -108,9 +109,22 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.006
-  m_Height: 0.012620791
+  m_Height: 0.001262079
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0.0029622072}
+--- !u!135 &3933465734493173914
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077648072046403820}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.0025
+  m_Center: {x: 0, y: 0, z: 0.01}
 --- !u!1 &4205336687996801076
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,6 +136,7 @@ GameObject:
   - component: {fileID: 4205336687996801079}
   - component: {fileID: 1730576053998118492}
   - component: {fileID: 8005788583481330035}
+  - component: {fileID: 7227210242608623844}
   m_Layer: 7
   m_Name: QAttack
   m_TagString: Untagged
@@ -179,3 +194,16 @@ MonoBehaviour:
   head: {fileID: 0}
   rb: {fileID: 1730576053998118492}
   parentPlayer: {fileID: 0}
+--- !u!135 &7227210242608623844
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4205336687996801076}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Radius: 0.2
+  m_Center: {x: 0, y: 0, z: 1}

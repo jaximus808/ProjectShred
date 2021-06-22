@@ -7,7 +7,9 @@ public class CEarth : MonoBehaviour
     public int id;
     public Rigidbody rb;
     public float baseMass;
-    public GameObject headParent; 
+    public GameObject headParent;
+
+    public Player casterPlayer; 
 
     public int damage;
     public bool child = false; 
@@ -45,14 +47,14 @@ public class CEarth : MonoBehaviour
             if (_collision.transform.gameObject == hitOb)
             {
                 if (rb.velocity.magnitude < 15f) return;
-                hitPlayer.ApplyDamage(damage + (int)rb.velocity.magnitude);
+                hitPlayer.ApplyDamage(damage + (int)rb.velocity.magnitude, casterPlayer.name);
             }
             else
             {
                 if (rb.velocity.magnitude < 15f) return;
                 hitPlayer = _collision.transform.GetComponent<Player>();
                 hitOb = _collision.transform.gameObject;
-                hitPlayer.ApplyDamage(damage + (int)rb.velocity.magnitude);
+                hitPlayer.ApplyDamage(damage + (int)rb.velocity.magnitude, casterPlayer.name);
 
             }
         }

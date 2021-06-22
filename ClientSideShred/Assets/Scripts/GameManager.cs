@@ -117,11 +117,22 @@ public class GameManager : MonoBehaviour
         Projectiles[_projectileId].Add(_id, newProjectile);
     }
 
-    public void HandleMessage(int _clientId,string _username,string _msg)
+    public void HandleMessage(int _clientId,string _username,string _msg, bool _console)
     {
         //chatObject.SetActive(false);
         GameObject curChat = Instantiate(chatObject, ChatContainer.transform);
-        curChat.GetComponent<Text>().text = $"{_username}({players[_clientId].className}): {_msg}";
+        string _className;
+        if (_console)
+        {
+            _className = "Console";
+            //maybe make a different color later idk lol
+        }
+        else
+        {
+            _className = players[_clientId].className;
+        }
+         
+        curChat.GetComponent<Text>().text = $"{_username}({_className}): {_msg}";
         curChat.transform.SetParent(ChatContainer.transform, false);
         curChat.SetActive(true);
     }

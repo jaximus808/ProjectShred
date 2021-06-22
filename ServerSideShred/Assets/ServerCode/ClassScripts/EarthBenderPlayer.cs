@@ -25,6 +25,8 @@ public class EarthBenderPlayer : MonoBehaviour
     public float setTimerR;
     public float maximumPull;
     public float setRAddTimer;
+    public float setDashTimer;
+    public float altDashForce; 
 
     [SerializeField] private CharacterController controller;
     [SerializeField] private GameObject EJoint;
@@ -72,6 +74,8 @@ public class EarthBenderPlayer : MonoBehaviour
     private int[] idQs = { 0, 0, 0, 0, 0 };
     private bool inEMode = false;
     private int HealthPoints;
+    private bool canDash = true;
+    //private bool upCorrection = 
 
     private float timerNorm = 0f;
     private float timerQ = 0f;
@@ -80,6 +84,8 @@ public class EarthBenderPlayer : MonoBehaviour
     private float timerE = 0f;
     private float timerR = 0f;
     private float timerRAdd = 0f;
+    private float timerDash = 0f;
+    private Vector3 dashForce = Vector3.zero;
 
 
     private int currCWall = 0;
@@ -108,7 +114,7 @@ public class EarthBenderPlayer : MonoBehaviour
         //username = _username;
         transform.position = new Vector3(NetworkManager.instance.RespawnPoint.position.x + Random.Range(-NetworkManager.instance.rangeRespawn, NetworkManager.instance.rangeRespawn), NetworkManager.instance.RespawnPoint.position.y, NetworkManager.instance.RespawnPoint.position.z + Random.Range(-NetworkManager.instance.rangeRespawn, NetworkManager.instance.rangeRespawn));
         player = _player;
-        inputs = new bool[13];
+        inputs = new bool[15];
         return setHp;
     }
 
@@ -176,6 +182,21 @@ public class EarthBenderPlayer : MonoBehaviour
             }
         }
         if (inRCharge) return;
+        if(inputs[14] && canDash)
+        {
+            //transform.right* _inputDirection.x + transform.forward * _inputDirection.y;
+            dashForce += (transform.right * _inputDirection.x + transform.forward * _inputDirection.y + new Vector3(0f, _inputDirection.z,0f)).normalized * altDashForce / 2;
+            canDash = false;
+        }
+        else if(!canDash)
+        {
+            timerDash += Time.fixedDeltaTime;
+            if(timerDash >= setDashTimer)
+            {
+                canDash = true;
+                timerDash = 0;
+            }
+        }
         Move(_inputDirection);
         if (inputs[8] && canE && !inEMode)
         {
@@ -310,9 +331,12 @@ public class EarthBenderPlayer : MonoBehaviour
         else if (inputs[7] && raising)
         {
             //Raise Object 
-            NetworkManager.EarthCScale[currCWall].transform.localScale += new Vector3(0f, raiseRate, 0);
-            ServerSend.RaiseEarthWall(currCWall, NetworkManager.EarthCScale[currCWall].transform.localScale);
-        }
+            Transform _parent = NetworkManager.EarthCScale[currCWall].transform.parent;
+            NetworkManager.EarthCScale[currCWall].transform.parent = null;
+            NetworkManager.EarthCScale[currCWall].transform.localScale += new Vector3(0f, raiseRate, 0f);
+            NetworkManager.EarthCScale[currCWall].transform.parent = _parent;
+            ServerSend.RaiseEarthWall(currCWall, NetworkManager.EarthCScale[currCWall].transform.lossyScale);
+        }  
         else if (raising)
         {
             raising = false;
@@ -408,7 +432,7 @@ public class EarthBenderPlayer : MonoBehaviour
                 }
                 parentOb.GetComponent<Rigidbody>().isKinematic = false;
                 parentOb.GetComponent<Rigidbody>().useGravity = false;
-                Debug.Log("boom");
+                
             }
             if (eHit.transform.tag == "RUlt")
             {
@@ -470,6 +494,7 @@ public class EarthBenderPlayer : MonoBehaviour
             Destroy(curScalingWall.rb);
             curScalingWall.child = true; 
         }
+        curScalingWall.casterPlayer = player;
         int[] _keyArrayEarthC = NetworkManager.EarthCScale.Keys.ToArray();
         if (_keyArrayEarthC.Length == 0)
         {
@@ -523,7 +548,7 @@ public class EarthBenderPlayer : MonoBehaviour
         currQEarthAtk.head = headOb.transform;
         currQEarthAtk.spawnPoint = spawnPos;
         currQEarthAtk.pending = true;
-        currQEarthAtk.parentPlayer = gameObject;
+        currQEarthAtk.casterPlayer = player;
         int[] _keyArrayEarthQ = NetworkManager.InActionEarthQ.Keys.ToArray();
         if (_keyArrayEarthQ.Length == 0)
         {
@@ -544,7 +569,8 @@ public class EarthBenderPlayer : MonoBehaviour
     private void ShootNormalAttack()
     {
         NormalEarthAttack currentEarthAttack = Instantiate(NormalAttackGameOb, NormalAttackSpawn.position, headOb.transform.rotation).GetComponent<NormalEarthAttack>();
-        currentEarthAttack.parentPlayer = gameObject;
+        
+        currentEarthAttack.casterPlayer = player;
         currentEarthAttack.GetComponent<Rigidbody>().AddForce(currentEarthAttack.transform.forward * normalAtkForce, ForceMode.Impulse);
         int[] _keyArrayEarth = NetworkManager.NormalEarthAttacks.Keys.ToArray();
         if (_keyArrayEarth.Length == 0)
@@ -565,11 +591,17 @@ public class EarthBenderPlayer : MonoBehaviour
     /// <param name="_inputDirection"></param>
     private void Move(Vector3 _inputDirection)
     {
+
         Vector3 _moveDirection = transform.right * _inputDirection.x + transform.forward * _inputDirection.y;
         //transform.position += _moveDirection * moveSpeed;
         //if()
-        _moveDirection *= moveSpeed;
-
+        
+        float _multiplier = 1;
+        if (inputs[13])
+        {
+            _multiplier = 2;
+        }
+        _moveDirection = _moveDirection.normalized * moveSpeed * _multiplier;
         if (Physics.CheckSphere(groundCheck.position, 1f, PlayerLayer))
         {
             yVelocity = 0f;
@@ -581,8 +613,13 @@ public class EarthBenderPlayer : MonoBehaviour
         yVelocity += gravity;
         _moveDirection.y = yVelocity;
 
+        
         controller.Move(_moveDirection);
-
+        if (dashForce.magnitude > 0.2f)
+        {
+            controller.Move(dashForce);
+        }
+        dashForce = Vector3.Lerp(dashForce, Vector3.zero, 4*Time.fixedDeltaTime);
         ServerSend.PlayerPosition(player.id, transform.position);
         ServerSend.PlayerRotation(player.id, transform.rotation);
     }

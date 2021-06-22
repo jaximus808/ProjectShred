@@ -242,7 +242,7 @@ public class Client
         foreach (CEarth _curNormAtk in NetworkManager.EarthCScale.Values)
         {
 
-            ServerSend.RaiseEarthWall(_curNormAtk.id, _curNormAtk.transform.localScale);
+            ServerSend.RaiseEarthWall(_curNormAtk.id, _curNormAtk.transform.lossyScale);
 
         }
         foreach (REarth _curNormAtk in NetworkManager.UltEarth.Values)

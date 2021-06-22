@@ -413,6 +413,8 @@ MonoBehaviour:
   setTimerR: 3
   maximumPull: 3000
   setRAddTimer: 3
+  setDashTimer: 3
+  altDashForce: 10
   controller: {fileID: 6359650146455104341}
   EJoint: {fileID: 4131561091672700002, guid: f12a3da69a29f0641a2474539bf3582d, type: 3}
   NormalAttackGameOb: {fileID: 9148607806936840117, guid: 4cb018124f594de4d9c26b69da842e8c, type: 3}
