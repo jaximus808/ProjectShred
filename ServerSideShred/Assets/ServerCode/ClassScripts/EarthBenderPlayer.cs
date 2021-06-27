@@ -181,23 +181,24 @@ public class EarthBenderPlayer : MonoBehaviour
 
             }
         }
-        if (inRCharge) return;
-        if(inputs[14] && canDash)
+        if (inputs[14] && canDash)
         {
             //transform.right* _inputDirection.x + transform.forward * _inputDirection.y;
-            dashForce += (transform.right * _inputDirection.x + transform.forward * _inputDirection.y + new Vector3(0f, _inputDirection.z,0f)).normalized * altDashForce / 2;
+            dashForce += (transform.right * _inputDirection.x + transform.forward * _inputDirection.y + new Vector3(0f, _inputDirection.z, 0f)).normalized * altDashForce / 2;
             canDash = false;
         }
-        else if(!canDash)
+        else if (!canDash)
         {
             timerDash += Time.fixedDeltaTime;
-            if(timerDash >= setDashTimer)
+            if (timerDash >= setDashTimer)
             {
                 canDash = true;
                 timerDash = 0;
             }
         }
         Move(_inputDirection);
+        if (inRCharge) return;
+        
         if (inputs[8] && canE && !inEMode)
         {
             TryECast();
@@ -376,6 +377,7 @@ public class EarthBenderPlayer : MonoBehaviour
             for (int y = 0; y < 8 * i; y++)
             {
                 REarth _rEarth = Instantiate(UltimateSpike, new Vector3(transform.position.x + UltimateSpawns[i - 1][y].x,transform.position.y,transform.position.z + UltimateSpawns[i - 1][y].z), Quaternion.identity).GetComponent<REarth>();
+                _rEarth.casterPlayer = player;
                 renderServerUlt(_rEarth, transform.position + UltimateSpawns[i - 1][y], Quaternion.identity);
             }
             UltimateSpawns[i - 1].Clear();
@@ -602,6 +604,11 @@ public class EarthBenderPlayer : MonoBehaviour
             _multiplier = 2;
         }
         _moveDirection = _moveDirection.normalized * moveSpeed * _multiplier;
+        if (dashForce.magnitude > 0.2f)
+        {
+            controller.Move(dashForce);
+        }
+        if (inRCharge) _moveDirection = Vector3.zero;
         if (Physics.CheckSphere(groundCheck.position, 1f, PlayerLayer))
         {
             yVelocity = 0f;
@@ -615,10 +622,7 @@ public class EarthBenderPlayer : MonoBehaviour
 
         
         controller.Move(_moveDirection);
-        if (dashForce.magnitude > 0.2f)
-        {
-            controller.Move(dashForce);
-        }
+        
         dashForce = Vector3.Lerp(dashForce, Vector3.zero, 4*Time.fixedDeltaTime);
         ServerSend.PlayerPosition(player.id, transform.position);
         ServerSend.PlayerRotation(player.id, transform.rotation);

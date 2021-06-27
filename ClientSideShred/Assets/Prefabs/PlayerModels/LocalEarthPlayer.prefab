@@ -226,8 +226,10 @@ MonoBehaviour:
   fill: {fileID: 438510164507671519}
   cam: {fileID: 8750979736129380277}
   bill: {fileID: 0}
+  usernameDisplay: {fileID: 0}
   id: 0
   username: 
+  className: 
 --- !u!114 &8257043053572129746
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,6 +339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04b0fe0bbec1ff243ad080c1b0736ee7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clientChat: {fileID: 0}
   player: {fileID: 5885737545435903263}
   sensitivity: 100
   clampAngle: 85
@@ -612,7 +615,7 @@ RectTransform:
   m_GameObject: {fileID: 8507514307185512594}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children:
   - {fileID: 6746505710795187833}
   - {fileID: 6558102805471973149}

@@ -395,7 +395,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   username: 
-  setHp: 100
+  setHp: 250
   gravity: -9.81
   moveSpeed: 5
   jumpSpeed: 5

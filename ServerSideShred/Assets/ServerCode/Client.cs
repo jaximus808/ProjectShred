@@ -292,6 +292,7 @@ public class Client
             {
                 player.CleanUp();
                 UnityEngine.Object.Destroy(player.gameObject);
+                ServerSend.RenderMessage(0, "Game", $"{player.username} has left the game", true);
                 player = null;
             }
             

@@ -62,6 +62,8 @@ MonoBehaviour:
   rb: {fileID: 6287864143670800122}
   baseMass: 0
   mass: 200
+  damage: 100
+  casterPlayer: {fileID: 0}
 --- !u!136 &915271390208212681
 CapsuleCollider:
   m_ObjectHideFlags: 0
