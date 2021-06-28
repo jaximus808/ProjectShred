@@ -8,6 +8,8 @@ public class NormalEarthAttack : MonoBehaviour
     public int id;
     public int damage;
 
+    public float projectileLifeSpan; 
+
     public Rigidbody rb;
 
     public Player casterPlayer; 
@@ -16,10 +18,21 @@ public class NormalEarthAttack : MonoBehaviour
     private Player hitPlayer;
     private GameObject hitOb;
 
+    private float curLifeSpan; 
+
     // Update is called once per frame
     private void FixedUpdate()
     {
+
         ServerSend.UpdateProjectile(0,id, transform.position, transform.rotation);
+        if(curLifeSpan >= projectileLifeSpan)
+        {
+            NetworkManager.NormalEarthAttacks.Remove(id);
+            ServerSend.DeleteObject(0, id);
+            Destroy(gameObject);
+            return;
+        }
+        curLifeSpan += Time.fixedDeltaTime; 
     }
 
     private void OnCollisionEnter(Collision _collision)

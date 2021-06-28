@@ -20,6 +20,8 @@ public class QEarth : MonoBehaviour
     private GameObject hitOb;
 
 
+    public float projectileLifeSpan;
+    private float curLifeSpan;
 
     // Update is called once per frame
     private void FixedUpdate()
@@ -33,7 +35,14 @@ public class QEarth : MonoBehaviour
         }
         //make a check
         ServerSend.UpdateProjectile(1, id, transform.position, transform.rotation);
-
+        if (curLifeSpan >= projectileLifeSpan)
+        {
+            NetworkManager.InActionEarthQ.Remove(id);
+            ServerSend.DeleteObject(1, id);
+            Destroy(gameObject);
+            return;
+        }
+        curLifeSpan += Time.fixedDeltaTime;
         //ServerSend.updateEarthNorm(id, transform.position, transform.rotation);
     }
 

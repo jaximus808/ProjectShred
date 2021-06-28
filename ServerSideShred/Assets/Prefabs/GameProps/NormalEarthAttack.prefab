@@ -142,6 +142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   damage: 60
+  projectileLifeSpan: 120
   rb: {fileID: 8017372302116465878}
   casterPlayer: {fileID: 0}
   parentPlayer: {fileID: 0}

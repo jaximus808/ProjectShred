@@ -16,7 +16,8 @@ public enum ServerPackets
     updateProjectile,
     raiseEarthWall,
     updateHealth,
-    rendMessage
+    rendMessage,
+    deleteObject
 }
 
 /// <summary>Sent from client to server.</summary>

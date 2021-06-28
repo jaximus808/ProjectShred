@@ -64,6 +64,7 @@ MonoBehaviour:
   mass: 200
   damage: 100
   casterPlayer: {fileID: 0}
+  projectileLifeSpan: 600
 --- !u!136 &915271390208212681
 CapsuleCollider:
   m_ObjectHideFlags: 0

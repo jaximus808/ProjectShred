@@ -101,4 +101,12 @@ public class ClientHandle : MonoBehaviour
         GameManager.instance.HandleMessage(_id, _user, _msg,_console);
     }
 
+    public static void DeleteObject(Packet _packet)
+    {
+        int _projectileId = _packet.ReadInt();
+        int _id = _packet.ReadInt();
+        Destroy(GameManager.Projectiles[_projectileId][_id]);
+        GameManager.Projectiles[_projectileId].Remove(_id);
+    }
+
 }

@@ -21,6 +21,9 @@ public class REarth : MonoBehaviour
     private Vector3 prevPos;
     private Quaternion preRot;
 
+
+    public float projectileLifeSpan;
+    private float curLifeSpan;
     // Update is called once per frame
     private void Start()
     {
@@ -34,15 +37,25 @@ public class REarth : MonoBehaviour
         //{
         //    hitPlayer.ApplyDamage(damage*2, casterPlayer.username);
         //}
-        firstStart = false; 
-        
+        firstStart = false;
+
+        if (curLifeSpan >= projectileLifeSpan)
+        {
+            NetworkManager.UltEarth.Remove(id);
+            ServerSend.DeleteObject(3, id);
+            Destroy(gameObject);
+            return;
+        }
+        curLifeSpan += Time.fixedDeltaTime;
+
         if (prevPos == transform.position && preRot == transform.rotation) return;
         
         ServerSend.UpdateProjectile(3, id, transform.position, transform.rotation);
         prevPos = transform.position;
         preRot = transform.rotation;
+        
     }
-
+    //get spawn hit detection working lol i forgot.
     private void OnCollisionEnter(Collision _collision)
     {
         if (_collision.transform.gameObject.layer == 8 && _collision.transform.gameObject != casterPlayer.gameObject)

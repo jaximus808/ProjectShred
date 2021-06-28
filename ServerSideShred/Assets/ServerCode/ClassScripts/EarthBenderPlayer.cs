@@ -400,7 +400,7 @@ public class EarthBenderPlayer : MonoBehaviour
             ServerSend.CreateProjectile(3, 0, _position, _rotation, false, 0);
             return;
         }
-        int _atkId = _keyArrayEarthR[_keyArrayEarthR.Length - 1] + 1;
+        int _atkId = _keyArrayEarthR.Max() + 1;
         //idQs[QTotalAdd - 1] = _atkId;
         curREarth.id = _atkId;
         NetworkManager.UltEarth.Add(_atkId, curREarth);
@@ -507,7 +507,7 @@ public class EarthBenderPlayer : MonoBehaviour
             ServerSend.CreateProjectile(2, 0, _position, _direction, false, 0);
             return;
         }
-        int _atkId = _keyArrayEarthC[_keyArrayEarthC.Length - 1] + 1;
+        int _atkId = _keyArrayEarthC.Max() + 1;
         //idQs[QTotalAdd - 1] = _atkId;
         curScalingWall.id = _atkId;
         NetworkManager.EarthCScale.Add(_atkId, curScalingWall);
@@ -560,7 +560,7 @@ public class EarthBenderPlayer : MonoBehaviour
             ServerSend.CreateProjectile(1, 0, spawnPos.position, currQEarthAtk.transform.rotation, false, 0);
             return;
         }
-        int _atkId = _keyArrayEarthQ[_keyArrayEarthQ.Length - 1] + 1;
+        int _atkId = _keyArrayEarthQ.Max()+1;
         idQs[QTotalAdd - 1] = _atkId;
         currQEarthAtk.id = _atkId;
         NetworkManager.InActionEarthQ.Add(_atkId, currQEarthAtk);
@@ -582,7 +582,7 @@ public class EarthBenderPlayer : MonoBehaviour
             ServerSend.CreateProjectile(0, 0, NormalAttackSpawn.position, currentEarthAttack.transform.rotation, false, 0);
             return;
         }
-        int _atkId = _keyArrayEarth[_keyArrayEarth.Length - 1] + 1;
+        int _atkId = _keyArrayEarth.Max() + 1;// _keyArrayEarth[_keyArrayEarth.Length - 1] + 1;
         currentEarthAttack.id = _atkId;
         NetworkManager.NormalEarthAttacks.Add(_atkId, currentEarthAttack);
         //Debug.Log($"Bruh: {NetworkManager.NormalEarthAttacks[_atkId].id}");

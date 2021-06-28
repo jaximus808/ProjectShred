@@ -11,6 +11,9 @@ public class UIManager : MonoBehaviour
     public GameObject startMenu;
     public GameObject ClassSelection;
     public InputField usernameField;
+    public InputField IPField;
+    public InputField Port;
+    public Text Status; 
 
     private void Awake()
     {
@@ -23,15 +26,24 @@ public class UIManager : MonoBehaviour
             Debug.Log("Instance already exists, destroying object!");
             Destroy(this);
         }
+        IPField.text = "127.0.0.1";
+        Port.text = "26950";
     }
 
     /// <summary>Attempts to connect to the server.</summary>
+    /// //create a save of servers through initalization
     public void ConnectToServer()
     {
+        string tryConnect = Client.instance.ConnectToServer(IPField.text, Port.text);
+
+        if (tryConnect != "Good")
+        {
+            Status.text = $"Status: {tryConnect}";
+            return;
+        }
         startMenu.SetActive(false);
         usernameField.interactable = false;
         
-        Client.instance.ConnectToServer();
         //Debug.Log("FUKC");
         
         //Debug.Log("FUKC2");

@@ -6,6 +6,8 @@ public class NetworkManager : MonoBehaviour
 {
     public static NetworkManager instance;
 
+    public int Port;
+
     public static Dictionary<int, NormalEarthAttack> NormalEarthAttacks = new Dictionary<int, NormalEarthAttack>();
     public static Dictionary<int, QEarth> InActionEarthQ = new Dictionary<int, QEarth>();
     public static Dictionary<int, CEarth> EarthCScale = new Dictionary<int, CEarth>();
@@ -37,7 +39,7 @@ public class NetworkManager : MonoBehaviour
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
 
-        Server.Start(50, 26950);
+        Server.Start(50, Port);
     }
 
     private void OnApplicationQuit()

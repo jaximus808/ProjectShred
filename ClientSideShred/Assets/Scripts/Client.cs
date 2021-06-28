@@ -45,12 +45,49 @@ public class Client : MonoBehaviour
     }
 
     /// <summary>Attempts to connect to the server.</summary>
-    public void ConnectToServer()
+    public string ConnectToServer(string _IPField,string _port)
     {
+        string _inIp = _IPField;
+        string _inPort = _port;
+        string _finalString = "";
+        string _finalPortString = "";
+        decimal curChar = 0;
+        int _dot = 0;
+        for(int i = 0; i < _inIp.Length; i++)
+        {
+            curChar = _inIp[i];
+            if (_inIp[i] != ' ')
+            {
+                if((curChar < 48 || curChar >57 )&& _inIp[i] != '.')
+                {
+                    return "IP is Wrong Format";
+                }
+                if (_inIp[i] == '.') _dot++;
+                _finalString += _inIp[i];
+            }    
+        }
+        if (_dot != 3) return "Ip is Wrong Format";
+        ip = _finalString;
+        Debug.Log(ip);
+        for (int i = 0; i < _inPort.Length; i++)
+        {
+            curChar = _inPort[i];
+            if (_inPort[i] != ' ')
+            {
+                if ((curChar < 48 || curChar > 57))
+                {
+                    return "Port is Wrong Format";
+                }
+                _finalPortString += _inPort[i];
+            }
+        }
+        port = Int32.Parse(_finalPortString);
+        Debug.Log(port);
         InitializeClientData();
 
         isConnected = true;
         tcp.Connect(); // Connect tcp, udp gets connected once tcp is done
+        return "Good";
     }
 
     public class TCP
@@ -308,7 +345,8 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.updateProjectile, ClientHandle.UpdateProjectile},
             { (int)ServerPackets.raiseEarthWall, ClientHandle.RaiseEarthWall},
             { (int)ServerPackets.updateHealth, ClientHandle.UpdateHealth},
-            { (int)ServerPackets.rendMessage, ClientHandle.RenderMessage}
+            { (int)ServerPackets.rendMessage, ClientHandle.RenderMessage},
+            { (int)ServerPackets.deleteObject,ClientHandle.DeleteObject}
         };
         Debug.Log("Initialized packets.");
     }

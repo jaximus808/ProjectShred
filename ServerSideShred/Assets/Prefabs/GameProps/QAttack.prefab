@@ -190,10 +190,11 @@ MonoBehaviour:
   id: 0
   pending: 0
   damage: 0
+  casterPlayer: {fileID: 0}
   spawnPoint: {fileID: 0}
   head: {fileID: 0}
   rb: {fileID: 1730576053998118492}
-  parentPlayer: {fileID: 0}
+  projectileLifeSpan: 180
 --- !u!135 &7227210242608623844
 SphereCollider:
   m_ObjectHideFlags: 0

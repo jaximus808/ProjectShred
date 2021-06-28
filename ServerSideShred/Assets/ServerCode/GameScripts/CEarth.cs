@@ -9,6 +9,9 @@ public class CEarth : MonoBehaviour
     public float baseMass;
     public GameObject headParent;
 
+    public float projectileLifeSpan;
+    private float curLifeSpan;
+
     public Player casterPlayer; 
 
     public int damage;
@@ -32,8 +35,16 @@ public class CEarth : MonoBehaviour
         if (!child)
         {
             rb.mass = transform.localScale.y + baseMass;
-        } 
-        
+        }
+        //make some indication that the thing will dissapear soon
+        if (curLifeSpan >= projectileLifeSpan)
+        {
+            NetworkManager.EarthCScale.Remove(id);
+            ServerSend.DeleteObject(2, id);
+            Destroy(gameObject);
+            return;
+        }
+        curLifeSpan += Time.fixedDeltaTime;
         if (prevPos == transform.position && preRot == transform.rotation) return;
         ServerSend.UpdateProjectile(2, id, transform.position, transform.rotation);
         prevPos = transform.position;
