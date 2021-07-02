@@ -49,7 +49,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void ApplyDamage(int Damage, string _casterName)
+    public bool ApplyDamage(int Damage, string _casterName)
     {
         curHp -= Damage;
         ServerSend.UpdateHealth(id, curHp);
@@ -60,8 +60,20 @@ public class Player : MonoBehaviour
                 case 0:
                     ServerSend.RenderMessage(0, "Game", $"{_casterName} has slain {username}", true);
                     earthPlayer.Respawn();
-                    break;
+                    return false;
             }
+        }
+        return true; 
+    }
+    public void ApplyPlayerForce(Vector3 _direction, float _multiplier)
+    {
+        Debug.Log("2");
+        switch (classId)
+        {
+            case 0:
+                earthPlayer.SetForce = _direction.normalized * _multiplier;
+                Debug.Log("3");
+                return;
         }
     }
 }

@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 4481808022990516829}
   - component: {fileID: 118850903119743129}
   - component: {fileID: 4189361734976128609}
+  - component: {fileID: 6845796608335442376}
   m_Layer: 9
   m_Name: UltimateSpike
   m_TagString: RUlt
@@ -63,10 +64,12 @@ MonoBehaviour:
   rb: {fileID: 6287864143670800122}
   baseMass: 0
   mass: 200
+  initForce: 5
   damage: 100
   casterPlayer: {fileID: 0}
   initLife: 1
   initUltCollider: {fileID: 4189361734976128609}
+  initUltCollider1: {fileID: 6845796608335442376}
   projectileLifeSpan: 600
 --- !u!136 &915271390208212681
 CapsuleCollider:
@@ -275,6 +278,20 @@ CapsuleCollider:
   m_Height: 20
   m_Direction: 1
   m_Center: {x: 0, y: 5, z: 0}
+--- !u!136 &6845796608335442376
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3121510185001579209}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 4
+  m_Height: 3
+  m_Direction: 1
+  m_Center: {x: 0, y: -3, z: 0}
 --- !u!1 &7843546419309653131
 GameObject:
   m_ObjectHideFlags: 0

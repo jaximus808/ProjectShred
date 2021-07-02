@@ -26,7 +26,9 @@ public class EarthBenderPlayer : MonoBehaviour
     public float maximumPull;
     public float setRAddTimer;
     public float setDashTimer;
-    public float altDashForce; 
+    public float altDashForce;
+
+    public Vector3 SetForce { set { dashForce = value; } }
 
     [SerializeField] private CharacterController controller;
     [SerializeField] private GameObject EJoint;
@@ -117,7 +119,6 @@ public class EarthBenderPlayer : MonoBehaviour
         inputs = new bool[15];
         return setHp;
     }
-
 
 
     /// <summary>Processes player input and moves the player.</summary>
@@ -404,7 +405,6 @@ public class EarthBenderPlayer : MonoBehaviour
         //idQs[QTotalAdd - 1] = _atkId;
         curREarth.id = _atkId;
         NetworkManager.UltEarth.Add(_atkId, curREarth);
-        Debug.Log($"NewR: {NetworkManager.UltEarth[_atkId].id}");
         ServerSend.CreateProjectile(3, _atkId, _position, _rotation, false, 0);
     }
 

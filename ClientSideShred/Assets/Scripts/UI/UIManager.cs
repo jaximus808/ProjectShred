@@ -13,7 +13,8 @@ public class UIManager : MonoBehaviour
     public InputField usernameField;
     public InputField IPField;
     public InputField Port;
-    public Text Status; 
+    public Text Status;
+    public GameObject CrossHair; // make this customizable later
 
     private void Awake()
     {
@@ -59,7 +60,9 @@ public class UIManager : MonoBehaviour
         ClientSend.WelcomeReceived(_id);
         Cam.SetActive(false);
         ClassSelection.SetActive(false);
-        
+        CrossHair.SetActive(true);
+
+
     }
 
 

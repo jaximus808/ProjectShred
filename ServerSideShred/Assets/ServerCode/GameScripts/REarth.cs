@@ -9,6 +9,8 @@ public class REarth : MonoBehaviour
     public float baseMass;
     public float mass;
 
+    public float initForce; 
+
     public int damage;
 
     public Player casterPlayer;
@@ -26,6 +28,7 @@ public class REarth : MonoBehaviour
     private float curInitLife = 0f;
 
     public Collider initUltCollider;
+    public Collider initUltCollider1;
 
     public float projectileLifeSpan;
     private float curLifeSpan;
@@ -45,6 +48,7 @@ public class REarth : MonoBehaviour
         if(curInitLife>=initLife && firstStart)
         {
             initUltCollider.enabled = false;
+            initUltCollider1.enabled = false; 
             firstStart = false;
         }
         else
@@ -86,8 +90,7 @@ public class REarth : MonoBehaviour
                 if (rb.velocity.magnitude < 15f) return;
                 hitPlayer = _collision.transform.GetComponent<Player>();
                 hitOb = _collision.transform.gameObject;
-                hitPlayer.ApplyDamage(damage, casterPlayer.username);
-
+                
             }
         }
 
@@ -99,13 +102,24 @@ public class REarth : MonoBehaviour
         {
             if (_collider.transform.gameObject == hitOb)
             {
-                hitPlayer.ApplyDamage(damage*2, casterPlayer.username);
+                bool _alive = hitPlayer.ApplyDamage(damage, casterPlayer.username);
+                if (_alive)
+                {
+                    hitPlayer.ApplyPlayerForce(new Vector3(hitPlayer.transform.position.x - transform.position.x, hitPlayer.transform.position.y - transform.position.y, hitPlayer.transform.position.z - transform.position.z), initForce);
+                }
             }
             else
             {
                 hitPlayer = _collider.transform.GetComponent<Player>();
                 hitOb = _collider.transform.gameObject;
                 hitPlayer.ApplyDamage(damage*2, casterPlayer.username);
+                bool _alive = hitPlayer.ApplyDamage(damage, casterPlayer.username);
+                if (_alive)
+                {
+                    Debug.Log("1");
+                    hitPlayer.ApplyPlayerForce(new Vector3(hitPlayer.transform.position.x - transform.position.x, hitPlayer.transform.position.y - transform.position.y, hitPlayer.transform.position.z - transform.position.z), initForce);
+                }
+                
 
             }
         }

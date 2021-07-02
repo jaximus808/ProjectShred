@@ -454,7 +454,7 @@ ScriptsOnlyBuild:
     className: EventSystem
   - hash:
       serializedVersion: 2
-      Hash: 308bd3cb1748e190976715bc85bab054
+      Hash: 34b91079cc0d37f272c62394bb68e257
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: UIManager
