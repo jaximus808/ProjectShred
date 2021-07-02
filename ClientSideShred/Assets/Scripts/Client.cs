@@ -346,7 +346,8 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.raiseEarthWall, ClientHandle.RaiseEarthWall},
             { (int)ServerPackets.updateHealth, ClientHandle.UpdateHealth},
             { (int)ServerPackets.rendMessage, ClientHandle.RenderMessage},
-            { (int)ServerPackets.deleteObject,ClientHandle.DeleteObject}
+            { (int)ServerPackets.deleteObject,ClientHandle.DeleteObject},
+            { (int)ServerPackets.serverPingCheck, ClientHandle.ServerPingCheck}
         };
         Debug.Log("Initialized packets.");
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -67,6 +68,16 @@ public class ClientSend : MonoBehaviour
         {
             _packet.Write(Client.instance.myId);
             _packet.Write(_chatMessage);
+            SendUDPData(_packet);
+        }
+    }
+
+    public static void PingCheck()
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.pingCheck))
+        {
+            _packet.Write(Client.instance.myId);
+            _packet.Write(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
             SendUDPData(_packet);
         }
     }

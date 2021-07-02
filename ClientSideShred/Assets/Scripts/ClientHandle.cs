@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
@@ -107,6 +108,12 @@ public class ClientHandle : MonoBehaviour
         int _id = _packet.ReadInt();
         Destroy(GameManager.Projectiles[_projectileId][_id]);
         GameManager.Projectiles[_projectileId].Remove(_id);
+    }
+
+    public static void ServerPingCheck(Packet _packet)
+    {
+        long _sentMs = _packet.ReadLong();
+        GameManager.instance.pingDisplay.text = $"Ping: {   DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - _sentMs}ms";
     }
 
 }

@@ -131,6 +131,7 @@ public class Server
             { (int)ClientPackets.initRender, ServerHandle.RenderCurrentServerInit },
             { (int)ClientPackets.playerMovement, ServerHandle.PlayerMovement },
             { (int)ClientPackets.sendChatMsg, ServerHandle.HandleChatMsg },
+            { (int)ClientPackets.pingCheck, ServerHandle.PingCheck },
         };
         Debug.Log("Initialized packets.");
     }

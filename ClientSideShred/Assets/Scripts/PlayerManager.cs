@@ -13,8 +13,9 @@ public class PlayerManager : MonoBehaviour
 
     public int id;
     public string username;
-    public string className; 
+    public string className;
 
+    
     public void SetMaxHeath(int _health)
     {
         Debug.Log(_health);
@@ -28,4 +29,6 @@ public class PlayerManager : MonoBehaviour
         slider.value = _health;
 
     }
+
+    
 }

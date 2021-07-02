@@ -54,4 +54,13 @@ public class ServerHandle
         Debug.Log($"{Server.clients[__fromClient].player.username} has said {_message}");
         ServerSend.RenderMessage(_clientId,Server.clients[__fromClient].player.username, _message, false);
     }
+
+    public static void PingCheck(int _fromClient, Packet _packet)
+    {
+        int _clientId = _packet.ReadInt();
+        if (_fromClient != _clientId) return;
+        long _clientMs = _packet.ReadLong();
+        
+        ServerSend.ReturnPingCheck(_clientId,_clientMs);
+    }
 }

@@ -21,6 +21,11 @@ public class REarth : MonoBehaviour
     private Vector3 prevPos;
     private Quaternion preRot;
 
+    public float initLife;
+
+    private float curInitLife = 0f;
+
+    public Collider initUltCollider;
 
     public float projectileLifeSpan;
     private float curLifeSpan;
@@ -37,7 +42,15 @@ public class REarth : MonoBehaviour
         //{
         //    hitPlayer.ApplyDamage(damage*2, casterPlayer.username);
         //}
-        firstStart = false;
+        if(curInitLife>=initLife && firstStart)
+        {
+            initUltCollider.enabled = false;
+            firstStart = false;
+        }
+        else
+        {
+            curInitLife += Time.fixedDeltaTime; 
+        }
 
         if (curLifeSpan >= projectileLifeSpan)
         {
@@ -65,12 +78,12 @@ public class REarth : MonoBehaviour
             Debug.Log(_collision.transform.gameObject.name);
             if (_collision.transform.gameObject == hitOb)
             {
-                if (rb.velocity.magnitude < 15f && !firstStart) return;
+                if (rb.velocity.magnitude < 15f) return;
                 hitPlayer.ApplyDamage(damage, casterPlayer.username);
             }
             else
             {
-                if (rb.velocity.magnitude < 15f && !firstStart) return;
+                if (rb.velocity.magnitude < 15f) return;
                 hitPlayer = _collision.transform.GetComponent<Player>();
                 hitOb = _collision.transform.gameObject;
                 hitPlayer.ApplyDamage(damage, casterPlayer.username);
@@ -78,6 +91,24 @@ public class REarth : MonoBehaviour
             }
         }
 
+    }
+
+    private void OnTriggerEnter(Collider _collider)
+    {
+        if (_collider.transform.gameObject.layer == 8 && _collider.transform.gameObject != casterPlayer.gameObject)
+        {
+            if (_collider.transform.gameObject == hitOb)
+            {
+                hitPlayer.ApplyDamage(damage*2, casterPlayer.username);
+            }
+            else
+            {
+                hitPlayer = _collider.transform.GetComponent<Player>();
+                hitOb = _collider.transform.gameObject;
+                hitPlayer.ApplyDamage(damage*2, casterPlayer.username);
+
+            }
+        }
     }
 }
 

@@ -220,5 +220,14 @@ public class ServerSend
         }
     }
 
+    public static void ReturnPingCheck(int _id, long _ms)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.serverPingCheck))
+        {
+            _packet.Write(_ms);
+            SendUDPData(_id, _packet);
+        }
+    }
+
     #endregion
 }

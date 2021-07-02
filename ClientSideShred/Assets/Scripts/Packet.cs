@@ -17,7 +17,9 @@ public enum ServerPackets
     raiseEarthWall,
     updateHealth,
     rendMessage,
-    deleteObject
+    deleteObject,
+    serverPingCheck
+
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -26,7 +28,8 @@ public enum ClientPackets
     welcomeReceived = 1,
     initRender,
     playerMovement,
-    sendChatMsg
+    sendChatMsg,
+    pingCheck
 }
 
 public class Packet : IDisposable

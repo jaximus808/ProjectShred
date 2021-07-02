@@ -430,7 +430,7 @@ ScriptsOnlyBuild:
     className: TMP_Settings
   - hash:
       serializedVersion: 2
-      Hash: 6e21b288b7bba688f2f669aa8e49bbc7
+      Hash: be074e9b1461b0dead4f3acb68572ca9
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameManager

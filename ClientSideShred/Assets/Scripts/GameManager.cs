@@ -26,7 +26,14 @@ public class GameManager : MonoBehaviour
 
     public GameObject localEarthPlayerPrefab;
     public GameObject earthPlayerPrefab;
-    
+
+    public float setPingTime;
+
+    private float curPingTime = 0;
+
+    public Text pingDisplay;
+
+
     //0 = EarthnormalAttack; 1 = EarthQPrefab
     public GameObject[] ProjectilesPrefab;
     //public GameObject earthNormalAttackPrefab;
@@ -135,5 +142,19 @@ public class GameManager : MonoBehaviour
         curChat.GetComponent<Text>().text = $"{_username}({_className}): {_msg}";
         curChat.transform.SetParent(ChatContainer.transform, false);
         curChat.SetActive(true);
+    }
+
+    private void Update()
+    {
+        
+        if (curPingTime >= setPingTime)
+        {
+            ClientSend.PingCheck();
+            curPingTime = 0;
+        }
+        else
+        {
+            curPingTime += Time.deltaTime;
+        }
     }
 }
