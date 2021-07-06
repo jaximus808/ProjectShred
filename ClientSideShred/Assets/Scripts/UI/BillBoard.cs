@@ -15,7 +15,8 @@ public class BillBoard : MonoBehaviour
 
     void LateUpdate()
     {
-        if (!aimTowards) return; 
+        if (!aimTowards) return;
+        if (cam == null) return;
         transform.LookAt(cam.position);
     }
 }

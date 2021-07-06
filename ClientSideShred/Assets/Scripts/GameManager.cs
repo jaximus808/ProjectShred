@@ -157,4 +157,23 @@ public class GameManager : MonoBehaviour
             curPingTime += Time.deltaTime;
         }
     }
+
+    public void Disconnect()
+    {
+        
+        foreach (KeyValuePair<int, PlayerManager> player in players)
+        {
+            Destroy(player.Value.gameObject);
+        }
+        players.Clear();
+        foreach (KeyValuePair<int, Dictionary<int, GameObject>> projectileParent in Projectiles)
+        {
+            foreach (KeyValuePair<int, GameObject> projectile in projectileParent.Value)
+            {
+                Destroy(projectile.Value.gameObject);
+                
+            }
+            Projectiles[projectileParent.Key].Clear();
+        }
+    }
 }

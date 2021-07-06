@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class EarthController : MonoBehaviour
 {
-    private ClientChatManager  ChatMag = GameManager.instance.ChatMang;
+    private ClientChatManager ChatMag;
+
+    private void Start()
+    {
+        ChatMag = UIManager.instance.clientChatMan;
+    }
 
     public Transform cameraRot; 
     private void FixedUpdate()
@@ -15,7 +20,7 @@ public class EarthController : MonoBehaviour
     /// <summary>Sends player input to the server.</summary>
     private void SendInputToServer()
     {
-        if (ChatMag.focused) return; 
+        if (ChatMag.focused || ChatMag.inIngameSettings) return; 
         bool[] _inputs = new bool[]
         {
             Input.GetKey(KeyCode.W),

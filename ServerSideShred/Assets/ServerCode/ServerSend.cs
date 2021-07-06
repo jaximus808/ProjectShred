@@ -216,7 +216,7 @@ public class ServerSend
         {
             _packet.Write(_projectileId);
             _packet.Write(_id);
-            SendUDPDataToAll(_packet);
+            SendTCPDataToAll(_packet);
         }
     }
 

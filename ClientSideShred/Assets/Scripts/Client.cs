@@ -10,16 +10,23 @@ public class Client : MonoBehaviour
     public static Client instance;
     public static int dataBufferSize = 4096;
 
+    public UIManager UIHandler; 
+
     public string ip = "127.0.0.1";
     public int port = 26950;
     public int myId = 0;
     public TCP tcp;
     public UDP udp;
 
+    public float setTimeoutTimer;
     public bool isConnected = false;
     private delegate void PacketHandler(Packet _packet);
     private static Dictionary<int, PacketHandler> packetHandlers;
 
+    private bool attemptingConnected = false;
+    private float curTimeoutTimer = 0f;
+
+    
     private void Awake()
     {
         if (instance == null)
@@ -37,6 +44,28 @@ public class Client : MonoBehaviour
     {
         tcp = new TCP();
         udp = new UDP();
+    }
+
+    private void Update()
+    {
+        if(attemptingConnected)
+        {
+            if(isConnected)
+            {
+                return; 
+            }
+            if(curTimeoutTimer >= setTimeoutTimer)
+            {
+                //make the UIManager do smth.
+                UIHandler.Disconnect();
+                curTimeoutTimer = 0f;
+                attemptingConnected = false;
+            }
+            else
+            {
+                curTimeoutTimer += Time.deltaTime; 
+            }
+        }
     }
 
     private void OnApplicationQuit()
@@ -84,8 +113,7 @@ public class Client : MonoBehaviour
         port = Int32.Parse(_finalPortString);
         Debug.Log(port);
         InitializeClientData();
-
-        isConnected = true;
+        attemptingConnected = true; 
         tcp.Connect(); // Connect tcp, udp gets connected once tcp is done
         return "Good";
     }
@@ -106,7 +134,6 @@ public class Client : MonoBehaviour
                 ReceiveBufferSize = dataBufferSize,
                 SendBufferSize = dataBufferSize
             };
-
             receiveBuffer = new byte[dataBufferSize];
             socket.BeginConnect(instance.ip, instance.port, ConnectCallback, socket);
         }
@@ -115,7 +142,9 @@ public class Client : MonoBehaviour
         private void ConnectCallback(IAsyncResult _result)
         {
             socket.EndConnect(_result);
-
+            instance.curTimeoutTimer = 0f;
+            instance.isConnected = true;
+            instance.attemptingConnected = false;
             if (!socket.Connected)
             {
                 return;
@@ -353,14 +382,20 @@ public class Client : MonoBehaviour
     }
 
     /// <summary>Disconnects from the server and stops all network traffic.</summary>
-    private void Disconnect()
+    public void Disconnect()
     {
         if (isConnected)
         {
+            UIHandler.InDisconnect();
+            GameManager.instance.Disconnect();
             isConnected = false;
             tcp.socket.Close();
             udp.socket.Close();
-
+            tcp = null;
+            udp = null;
+            GC.Collect();
+            tcp = new TCP();
+            udp = new UDP();
             Debug.Log("Disconnected from server.");
         }
     }

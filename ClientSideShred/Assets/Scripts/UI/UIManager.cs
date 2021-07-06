@@ -7,6 +7,8 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
+    public ClientChatManager clientChatMan;
+
     public GameObject Cam;
     public GameObject startMenu;
     public GameObject ClassSelection;
@@ -14,7 +16,9 @@ public class UIManager : MonoBehaviour
     public InputField IPField;
     public InputField Port;
     public Text Status;
+    public Text ConnectingStatus;
     public GameObject CrossHair; // make this customizable later
+
 
     private void Awake()
     {
@@ -44,15 +48,16 @@ public class UIManager : MonoBehaviour
         }
         startMenu.SetActive(false);
         usernameField.interactable = false;
-        
+        ConnectingStatus.gameObject.SetActive(true);
         //Debug.Log("FUKC");
-        
+
         //Debug.Log("FUKC2");
 
     }
     public void ClassSelectionShow()
     {
-        ClassSelection.SetActive(true);
+        ClassSelection.gameObject.SetActive(true);
+        ConnectingStatus.gameObject.SetActive(false);
     }
 
     public void ChooseClass(int _id)
@@ -61,9 +66,33 @@ public class UIManager : MonoBehaviour
         Cam.SetActive(false);
         ClassSelection.SetActive(false);
         CrossHair.SetActive(true);
+        clientChatMan.ChatArea.SetActive(true);
 
-
+        clientChatMan.inIngameSettings = false;
     }
 
+    public void Disconnect()
+    {
+        Debug.Log("Failed Connecting");
+        Status.text = $"Status: Server is not responding or doesn't exist";
+        startMenu.SetActive(true);
+        ConnectingStatus.gameObject.SetActive(false);
+        usernameField.interactable = true;
+    }
 
+    public void InDisconnect()
+    {
+        Status.text = $"Status: You Left The Game";
+        startMenu.SetActive(true);
+        ConnectingStatus.gameObject.SetActive(false);
+        usernameField.interactable = true;
+        clientChatMan.InGameSettings.SetActive(false);
+        Cam.SetActive(true);
+        CrossHair.SetActive(false);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }

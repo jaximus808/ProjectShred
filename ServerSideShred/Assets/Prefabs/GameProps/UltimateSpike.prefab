@@ -70,7 +70,7 @@ MonoBehaviour:
   initLife: 1
   initUltCollider: {fileID: 4189361734976128609}
   initUltCollider1: {fileID: 6845796608335442376}
-  projectileLifeSpan: 600
+  projectileLifeSpan: 120
 --- !u!136 &915271390208212681
 CapsuleCollider:
   m_ObjectHideFlags: 0

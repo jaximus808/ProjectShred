@@ -62,51 +62,51 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1422}
-    - Class: 114
       Script: {instanceID: 1424}
     - Class: 114
-      Script: {instanceID: 1490}
+      Script: {instanceID: 1426}
     - Class: 114
-      Script: {instanceID: 1516}
+      Script: {instanceID: 1492}
     - Class: 114
-      Script: {instanceID: 1676}
+      Script: {instanceID: 1518}
     - Class: 114
-      Script: {instanceID: 2016}
+      Script: {instanceID: 1678}
     - Class: 114
-      Script: {instanceID: 2054}
+      Script: {instanceID: 2018}
     - Class: 114
-      Script: {instanceID: 2116}
+      Script: {instanceID: 2056}
     - Class: 114
-      Script: {instanceID: 2124}
+      Script: {instanceID: 2118}
     - Class: 114
-      Script: {instanceID: 2352}
+      Script: {instanceID: 2126}
     - Class: 114
-      Script: {instanceID: 2400}
+      Script: {instanceID: 2354}
     - Class: 114
-      Script: {instanceID: 2540}
+      Script: {instanceID: 2402}
     - Class: 114
-      Script: {instanceID: 2622}
+      Script: {instanceID: 2542}
     - Class: 114
-      Script: {instanceID: 2680}
+      Script: {instanceID: 2624}
     - Class: 114
-      Script: {instanceID: 2798}
+      Script: {instanceID: 2682}
     - Class: 114
-      Script: {instanceID: 2804}
+      Script: {instanceID: 2800}
     - Class: 114
-      Script: {instanceID: 2816}
+      Script: {instanceID: 2806}
     - Class: 114
-      Script: {instanceID: 2884}
+      Script: {instanceID: 2818}
     - Class: 114
-      Script: {instanceID: 3030}
+      Script: {instanceID: 2886}
     - Class: 114
-      Script: {instanceID: 3098}
+      Script: {instanceID: 3032}
     - Class: 114
-      Script: {instanceID: 3340}
+      Script: {instanceID: 3100}
     - Class: 114
-      Script: {instanceID: 3354}
+      Script: {instanceID: 3342}
     - Class: 114
-      Script: {instanceID: 3472}
+      Script: {instanceID: 3356}
+    - Class: 114
+      Script: {instanceID: 3474}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -370,7 +370,7 @@ ScriptsOnlyBuild:
     className: RawImage
   - hash:
       serializedVersion: 2
-      Hash: e8a028ce3383488906d53c9718778a99
+      Hash: 43d70b604b3d050bb49b03d8cd753aaa
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Client
@@ -442,7 +442,7 @@ ScriptsOnlyBuild:
     className: AspectRatioFitter
   - hash:
       serializedVersion: 2
-      Hash: 3d7220d6adab38663486f0081a23f7e8
+      Hash: 4907a6f6dcb1096746375e3a8774617d
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: ClientChatManager
@@ -454,7 +454,7 @@ ScriptsOnlyBuild:
     className: EventSystem
   - hash:
       serializedVersion: 2
-      Hash: 34b91079cc0d37f272c62394bb68e257
+      Hash: a3dbcd55896f29508618ca140d4b7bcd
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: UIManager
@@ -623,4 +623,4 @@ ScriptsOnlyBuild:
   platform: 5
   scenePathNames:
   - Assets/Game.unity
-  playerPath: F:/Unity_Projects/Project_Shred/ClientSideShred/ClientSideShred.exe
+  playerPath: F:/Unity_Projects/Project_Shred/Builds/Shred.exe

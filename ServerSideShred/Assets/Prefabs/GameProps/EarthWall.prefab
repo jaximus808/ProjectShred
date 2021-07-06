@@ -144,7 +144,7 @@ MonoBehaviour:
   rb: {fileID: 4495884825629357002}
   baseMass: 50
   headParent: {fileID: 0}
-  projectileLifeSpan: 300
+  projectileLifeSpan: 180
   casterPlayer: {fileID: 0}
   damage: 40
   child: 0

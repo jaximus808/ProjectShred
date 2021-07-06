@@ -7,6 +7,11 @@ public class ClientChatManager : MonoBehaviour
 {
     public InputField chatInput;
 
+    public GameObject ChatArea;
+    public GameObject InGameSettings;
+
+    public Button DisconnectButton;
+
     private int state = 1;
     public bool focused = false;
 
@@ -21,6 +26,9 @@ public class ClientChatManager : MonoBehaviour
     private bool canEsc = true;
     private float setEscTimer = 0.5f;
     private float curEscTimer = 0f;
+
+    public bool inIngameSettings = false; 
+    
 
     private void Update()
     {
@@ -70,14 +78,34 @@ public class ClientChatManager : MonoBehaviour
             focused = false;
             chatInput.interactable = false;
         }
-        if(Input.GetKey(KeyCode.Escape) && canEsc)
+        if(Input.GetKey(KeyCode.Escape) && canEsc && focused)
         {
-            canRet = false;
+            canEsc = false;
             chatInput.text = "";
             focused = false;
             chatInput.interactable = false;
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }
+        if (Input.GetKey(KeyCode.Escape) && canEsc && !inIngameSettings && !focused && Client.instance.isConnected)
+        {
+            //ingame menu; 
+            canEsc = false; 
+            ChatArea.SetActive(false);
+            InGameSettings.SetActive(true);
+            inIngameSettings = true;
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
 
+        }
+        else if (Input.GetKey(KeyCode.Escape) && canEsc && !focused)
+        {
+            //ingame menu; 
+            canEsc = false;
+            ChatArea.SetActive(true);
+            InGameSettings.SetActive(false);
+            inIngameSettings = false;
+        }
     }
     private void Timers()
     {
@@ -101,10 +129,12 @@ public class ClientChatManager : MonoBehaviour
         }
         if (!canEsc)
         {
+            
             curEscTimer += Time.deltaTime;
             if (curEscTimer > setEscTimer)
             {
                 canEsc = true;
+               
                 curEscTimer = 0;
             }
         }

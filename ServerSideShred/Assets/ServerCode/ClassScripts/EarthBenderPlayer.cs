@@ -185,7 +185,9 @@ public class EarthBenderPlayer : MonoBehaviour
         if (inputs[14] && canDash)
         {
             //transform.right* _inputDirection.x + transform.forward * _inputDirection.y;
-            dashForce += (transform.right * _inputDirection.x + transform.forward * _inputDirection.y + new Vector3(0f, _inputDirection.z, 0f)).normalized * altDashForce / 2;
+            Vector3 _directionDash = (transform.right * _inputDirection.x + transform.forward * _inputDirection.y + new Vector3(0f, _inputDirection.z, 0f));
+            if (_directionDash.magnitude == 0) return;
+            dashForce += _directionDash.normalized * altDashForce / 2;
             canDash = false;
         }
         else if (!canDash)
