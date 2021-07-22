@@ -18,7 +18,8 @@ public enum ServerPackets
     updateHealth,
     rendMessage,
     deleteObject,
-    serverPingCheck
+    serverPingCheck,
+    abilityCoolDown
 
 }
 

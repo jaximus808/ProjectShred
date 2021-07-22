@@ -17,7 +17,6 @@ public class REarth : MonoBehaviour
     
     private GameObject hitOb;
     private Player hitPlayer;
-    private bool rSpawnHit = false;
     private bool firstStart = true; 
 
     private Vector3 prevPos;
@@ -77,8 +76,6 @@ public class REarth : MonoBehaviour
     {
         if (_collision.transform.gameObject.layer == 8 && _collision.transform.gameObject != casterPlayer.gameObject)
         {
-            rSpawnHit = true;
-            Debug.Log("L3");
             Debug.Log(_collision.transform.gameObject.name);
             if (_collision.transform.gameObject == hitOb)
             {

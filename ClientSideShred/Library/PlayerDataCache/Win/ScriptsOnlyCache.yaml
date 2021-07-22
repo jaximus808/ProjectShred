@@ -310,7 +310,7 @@ ScriptsOnlyBuild:
     className: EarthController
   - hash:
       serializedVersion: 2
-      Hash: de34d4e9969cc8e754184dc9405519f1
+      Hash: 1f778e42df3ace1e0df1c46e5819c194
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PlayerManager
@@ -623,4 +623,4 @@ ScriptsOnlyBuild:
   platform: 5
   scenePathNames:
   - Assets/Game.unity
-  playerPath: F:/Unity_Projects/Project_Shred/Builds/Shred.exe
+  playerPath: F:/Unity_Projects/Project_Shred/Builds/Build0722/Shred.exe

@@ -86,6 +86,17 @@ public class ClientHandle : MonoBehaviour
         
     }
 
+    public static void UpdateAbilityCooldown(Packet _packet)
+    {
+        float _auto = _packet.ReadFloat();
+        float _Q = _packet.ReadFloat();
+        float _C = _packet.ReadFloat();
+        float _E = _packet.ReadFloat();
+        float _R = _packet.ReadFloat();
+        if (!GameManager.players.ContainsKey(Client.instance.myId)) return;
+        GameManager.players[Client.instance.myId].UpdateTimers(_auto,_Q,_C,_E,_R);
+    }
+
     public static void PlayerDisconnect(Packet _packet)
     {
         int _id = _packet.ReadInt();

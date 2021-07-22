@@ -189,6 +189,19 @@ public class ServerSend
         }
     }
 
+    public static void UpdateCoolDown(int _id, float _auto, float _Q, float _C, float _E, float _R)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.abilityCoolDown))
+        {
+            _packet.Write(_auto);
+            _packet.Write(_Q);
+            _packet.Write(_C);
+            _packet.Write(_E);
+            _packet.Write(_R);
+            SendUDPData(_id,_packet);
+        }
+    }
+
     public static void PlayerDisconnected(int _id)
     {
         using (Packet _packet = new Packet((int)ServerPackets.playerDisconnected))

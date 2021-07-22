@@ -376,7 +376,8 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.updateHealth, ClientHandle.UpdateHealth},
             { (int)ServerPackets.rendMessage, ClientHandle.RenderMessage},
             { (int)ServerPackets.deleteObject,ClientHandle.DeleteObject},
-            { (int)ServerPackets.serverPingCheck, ClientHandle.ServerPingCheck}
+            { (int)ServerPackets.serverPingCheck, ClientHandle.ServerPingCheck},
+            { (int)ServerPackets.abilityCoolDown, ClientHandle.UpdateAbilityCooldown}  
         };
         Debug.Log("Initialized packets.");
     }

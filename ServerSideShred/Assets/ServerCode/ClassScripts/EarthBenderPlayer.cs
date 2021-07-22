@@ -68,7 +68,7 @@ public class EarthBenderPlayer : MonoBehaviour
     private float velocity;
     private Player player;
     private bool canNormalAtk;
-    private bool canQ;
+    private bool canQ = true;
     private bool inQProc = false;
     private bool canC = true;
     private bool raising = false;
@@ -96,11 +96,12 @@ public class EarthBenderPlayer : MonoBehaviour
     private void Start()
     {
         //idQs = new int[] { 0,0,0,0,0};
-        timerC = setTimerC;
-        timerE = setTimerE;
-        timerNorm = setTimerNorm;
-        timerR = setTimerR;
-        timerQ = setTimerQ;
+        timerC = 0;
+        timerE = 0;
+        timerNorm = 0;
+        timerR = 0;
+        timerQ = 0;
+        timerDash = setDashTimer;
         canNormalAtk = true;
         gravity *= Time.fixedDeltaTime * Time.fixedDeltaTime;
         moveSpeed *= Time.fixedDeltaTime;
@@ -152,6 +153,7 @@ public class EarthBenderPlayer : MonoBehaviour
         }
         if (inputs[11] && canR)
         {
+            
             if (timerRAdd <= 0)
             {
                 Debug.Log(ultLayer);
@@ -177,7 +179,6 @@ public class EarthBenderPlayer : MonoBehaviour
             timerR -= Time.fixedDeltaTime;
             if (timerR <= 0)
             {
-                timerR = setTimerR;
                 canR = true;
 
             }
@@ -192,14 +193,15 @@ public class EarthBenderPlayer : MonoBehaviour
         }
         else if (!canDash)
         {
-            timerDash += Time.fixedDeltaTime;
-            if (timerDash >= setDashTimer)
+            timerDash -= Time.fixedDeltaTime;
+            if (timerDash <= 0)
             {
                 canDash = true;
-                timerDash = 0;
+                timerDash = setDashTimer;
             }
         }
         Move(_inputDirection);
+        ServerSend.UpdateCoolDown(player.id,timerNorm,timerQ,timerC,timerE,timerR);
         if (inRCharge) return;
         
         if (inputs[8] && canE && !inEMode)
@@ -226,6 +228,7 @@ public class EarthBenderPlayer : MonoBehaviour
             inEMode = false;
             canNormalAtk = false;
             timerNorm = 1;
+            timerE = setTimerE;
         }
         else if (inputs[8] && canE && inEMode)
         {
@@ -251,12 +254,13 @@ public class EarthBenderPlayer : MonoBehaviour
             cEarthGrabbed = null;
             canE = false;
             inEMode = false;
+            timerE = setTimerE;
 
         }
         else if (!canE)
         {
             timerE -= Time.fixedDeltaTime;
-            if (timerE <= 0) { timerE = setTimerE; canE = true; }
+            if (timerE <= 0) { canE = true; }
         }
 
 
@@ -292,19 +296,20 @@ public class EarthBenderPlayer : MonoBehaviour
             ShootQSpikes();
             Debug.Log($"Shot {QTotalAdd} spikes");
             QTotalAdd = 0;
+            timerQ = setTimerQ;
         }
         else if (!canQ)
         {
             timerQ -= Time.fixedDeltaTime;
             if (timerQ <= 0)
             {
-                timerQ = setTimerQ;
                 canQ = true;
             }
         }
         if (canNormalAtk && inputs[5] && !inEMode)
         {
             canNormalAtk = false;
+            timerNorm = setTimerNorm;
             ShootNormalAttack();
             //shoot soemthing
         }
@@ -313,7 +318,6 @@ public class EarthBenderPlayer : MonoBehaviour
             timerNorm -= Time.fixedDeltaTime;
             if (timerNorm <= 0)
             {
-                timerNorm = setTimerNorm;
                 canNormalAtk = true;
             }
         }
@@ -346,13 +350,13 @@ public class EarthBenderPlayer : MonoBehaviour
             raising = false;
             canC = false;
             currCWall = 0;
+            timerC = setTimerC;
         }
         if (!canC)
         {
             timerC -= Time.fixedDeltaTime;
             if (timerC <= 0)
             {
-                timerC = setTimerC;
                 canC = true;
             }
         }
@@ -373,15 +377,15 @@ public class EarthBenderPlayer : MonoBehaviour
     {
         canR = false;
         inRCharge = false;
-
+            
         timerR = setTimerR;
         for (int i = 1; i < ultLayer + 1; i++)
         {
             for (int y = 0; y < 8 * i; y++)
             {
-                REarth _rEarth = Instantiate(UltimateSpike, new Vector3(transform.position.x + UltimateSpawns[i - 1][y].x,transform.position.y,transform.position.z + UltimateSpawns[i - 1][y].z), Quaternion.identity).GetComponent<REarth>();
+                REarth _rEarth = Instantiate(UltimateSpike, new Vector3(transform.position.x + UltimateSpawns[i - 1][y].x,transform.position.y+3,transform.position.z + UltimateSpawns[i - 1][y].z), Quaternion.identity).GetComponent<REarth>();
                 _rEarth.casterPlayer = player;
-                renderServerUlt(_rEarth, transform.position + UltimateSpawns[i - 1][y], Quaternion.identity);
+                renderServerUlt(_rEarth, transform.position + UltimateSpawns[i - 1][y]+new Vector3(0f,3f,0f), Quaternion.identity);
             }
             UltimateSpawns[i - 1].Clear();
         }
