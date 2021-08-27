@@ -88,6 +88,7 @@ public class EarthBenderPlayer : MonoBehaviour
     private float timerRAdd = 0f;
     private float timerDash = 0f;
     private Vector3 dashForce = Vector3.zero;
+    private float frictionMult = 2f;
 
 
     private int currCWall = 0;
@@ -189,6 +190,9 @@ public class EarthBenderPlayer : MonoBehaviour
             Vector3 _directionDash = (transform.right * _inputDirection.x + transform.forward * _inputDirection.y + new Vector3(0f, _inputDirection.z, 0f));
             if (_directionDash.magnitude == 0) return;
             dashForce += _directionDash.normalized * altDashForce / 2;
+            yVelocity += dashForce.y;
+            dashForce.y = 0;
+
             canDash = false;
         }
         else if (!canDash)
@@ -210,6 +214,7 @@ public class EarthBenderPlayer : MonoBehaviour
         }
         else if (inputs[5] && inEMode)
         {
+            //can use var
             switch (eState)
             {
                 case "CWall":
@@ -617,11 +622,19 @@ public class EarthBenderPlayer : MonoBehaviour
         if (inRCharge) _moveDirection = Vector3.zero;
         if (Physics.CheckSphere(groundCheck.position, 1f, PlayerLayer))
         {
+            frictionMult = 4f; 
             yVelocity = 0f;
             if (_inputDirection.z == 1)
             {
-                yVelocity = jumpSpeed;
+                Vector3 _directionDash = (transform.right * _inputDirection.x + transform.forward * _inputDirection.y);
+                dashForce += _directionDash.normalized * altDashForce / 10;
+                yVelocity += jumpSpeed;
             }
+            dashForce = Vector3.Lerp(dashForce, Vector3.zero, frictionMult * Time.fixedDeltaTime);
+        }
+        else 
+        {
+            frictionMult = 1f;
         }
         yVelocity += gravity;
         _moveDirection.y = yVelocity;
@@ -629,7 +642,6 @@ public class EarthBenderPlayer : MonoBehaviour
         
         controller.Move(_moveDirection);
         
-        dashForce = Vector3.Lerp(dashForce, Vector3.zero, 4*Time.fixedDeltaTime);
         ServerSend.PlayerPosition(player.id, transform.position);
         ServerSend.PlayerRotation(player.id, transform.rotation);
     }
