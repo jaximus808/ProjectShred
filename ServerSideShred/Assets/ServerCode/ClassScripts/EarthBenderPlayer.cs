@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class EarthBenderPlayer : MonoBehaviour
+//TODO: FIX LOGIC ERRORS, q's spam and dont stack, implement r, and the wall raising is broken server side
+
+public class EarthBenderPlayer : ClassConstructor
 {
     public int id;
     public string username;
@@ -60,7 +62,6 @@ public class EarthBenderPlayer : MonoBehaviour
 
 
     private string eState = "none";
-    private bool canR = true;
     private bool inRCharge = false;
     private int ultLayer = 0;
     private float yVelocity = 0;
@@ -68,23 +69,20 @@ public class EarthBenderPlayer : MonoBehaviour
     private float velocity;
     private Player player;
     private bool canNormalAtk;
-    private bool canQ = true;
     private bool inQProc = false;
-    private bool canC = true;
     private bool raising = false;
-    private bool canE = true;
     private int[] idQs = { 0, 0, 0, 0, 0 };
     private bool inEMode = false;
     private int HealthPoints;
     private bool canDash = true;
     //private bool upCorrection = 
 
-    private float timerNorm = 0f;
-    private float timerQ = 0f;
+    //private float timerNorm = 0f;
+    //private float timerQ = 0f;
     private float timerQAdd = 0f;
-    private float timerC = 0f;
-    private float timerE = 0f;
-    private float timerR = 0f;
+    //private float timerC = 0f;
+    //private float timerE = 0f;
+    //private float timerR = 0f;
     private float timerRAdd = 0f;
     private float timerDash = 0f;
     private Vector3 dashForce = Vector3.zero;
@@ -97,13 +95,14 @@ public class EarthBenderPlayer : MonoBehaviour
     private void Start()
     {
         //idQs = new int[] { 0,0,0,0,0};
-        timerC = 0;
-        timerE = 0;
-        timerNorm = 0;
-        timerR = 0;
-        timerQ = 0;
+
+        setAuto = setTimerNorm;
+        setQ = setTimerQ;
+        setC = setTimerC;
+        setE = setTimerE;
+        setR = setR;
+
         timerDash = setDashTimer;
-        canNormalAtk = true;
         gravity *= Time.fixedDeltaTime * Time.fixedDeltaTime;
         moveSpeed *= Time.fixedDeltaTime;
         jumpSpeed *= Time.fixedDeltaTime;
@@ -205,9 +204,14 @@ public class EarthBenderPlayer : MonoBehaviour
             }
         }
         Move(_inputDirection);
-        ServerSend.UpdateCoolDown(player.id,timerNorm,timerQ,timerC,timerE,timerR);
+        ServerSend.UpdateCoolDown(player.id,timerAuto,timerQ,timerC,timerE,timerR);
         if (inRCharge) return;
-        
+        // eing
+
+        ApplyInput(new bool[5] { inputs[5], inputs[6], inputs[7], inputs[8], false});
+        MainTimerCount();
+        //testing parent
+        return; 
         if (inputs[8] && canE && !inEMode)
         {
             TryECast();
@@ -232,7 +236,7 @@ public class EarthBenderPlayer : MonoBehaviour
             canE = false;
             inEMode = false;
             canNormalAtk = false;
-            timerNorm = 1;
+            timerAuto = 1;
             timerE = setTimerE;
         }
         else if (inputs[8] && canE && inEMode)
@@ -311,19 +315,19 @@ public class EarthBenderPlayer : MonoBehaviour
                 canQ = true;
             }
         }
-        if (canNormalAtk && inputs[5] && !inEMode)
+        if (canAuto && inputs[5] && !inEMode)
         {
             canNormalAtk = false;
-            timerNorm = setTimerNorm;
-            ShootNormalAttack();
+            timerAuto = setTimerNorm;
+            AutoAbility();
             //shoot soemthing
         }
-        else if (!canNormalAtk)
+        else if (!canAuto)
         {
-            timerNorm -= Time.fixedDeltaTime;
-            if (timerNorm <= 0)
+            timerAuto -= Time.fixedDeltaTime;
+            if (timerAuto <= 0)
             {
-                canNormalAtk = true;
+                canAuto = true;
             }
         }
         //prob make this logic nicer but should work
@@ -364,6 +368,162 @@ public class EarthBenderPlayer : MonoBehaviour
             {
                 canC = true;
             }
+        }
+    }
+
+    public override void AutoAbility()
+    {
+        if (inEMode) return; 
+        NormalEarthAttack currentEarthAttack = Instantiate(NormalAttackGameOb, NormalAttackSpawn.position, headOb.transform.rotation).GetComponent<NormalEarthAttack>();
+
+        currentEarthAttack.casterPlayer = player;
+        currentEarthAttack.GetComponent<Rigidbody>().AddForce(currentEarthAttack.transform.forward * normalAtkForce, ForceMode.Impulse);
+        //maybe make a function for this too in parent class
+        canAuto = false;
+        int[] _keyArrayEarth = NetworkManager.NormalEarthAttacks.Keys.ToArray();
+        if (_keyArrayEarth.Length == 0)
+        {
+            currentEarthAttack.id = 0;
+            NetworkManager.NormalEarthAttacks.Add(0, currentEarthAttack);
+            ServerSend.CreateProjectile(0, 0, NormalAttackSpawn.position, currentEarthAttack.transform.rotation, false, 0);
+            return;
+        }
+        int _atkId = _keyArrayEarth.Max() + 1;// _keyArrayEarth[_keyArrayEarth.Length - 1] + 1;
+        currentEarthAttack.id = _atkId;
+        NetworkManager.NormalEarthAttacks.Add(_atkId, currentEarthAttack);
+        //Debug.Log($"Bruh: {NetworkManager.NormalEarthAttacks[_atkId].id}");
+        ServerSend.CreateProjectile(0, _atkId, NormalAttackSpawn.position, currentEarthAttack.transform.rotation, false, 0);
+    }
+
+
+    public override void QAbility()
+    {
+        if(!inQProc)inQProc = true;
+        if (timerQAdd <= 0)
+        {
+            if (QTotalAdd + 1 <= qAddCap)
+            {
+                QTotalAdd++;
+                    //send to client of it adding or smth idk
+                AddSpikesPend();
+                Debug.Log("QADDED");
+                timerQAdd = setTimerQAdd;
+            }
+        }
+        else
+        {
+            //for now like this but when timer function used change/remove this
+            timerQAdd -= Time.fixedDeltaTime;
+        }
+    }
+
+    public override void InteruptC()
+    {
+        if (!canQ || !inQProc) return;
+        canQ = false;
+        inQProc = false;
+        ShootQSpikes();
+        Debug.Log($"Shot {QTotalAdd} spikes");
+        QTotalAdd = 0;
+    }
+
+    public override void CAbility()
+    {
+        if(raising)
+        {
+            Transform _parent = NetworkManager.EarthCScale[currCWall].transform.parent;
+            NetworkManager.EarthCScale[currCWall].transform.parent = null;
+            NetworkManager.EarthCScale[currCWall].transform.localScale += new Vector3(0f, raiseRate, 0f);
+            NetworkManager.EarthCScale[currCWall].transform.parent = _parent;
+            ServerSend.RaiseEarthWall(currCWall, NetworkManager.EarthCScale[currCWall].transform.lossyScale);
+        }
+        else
+        {
+            RaycastHit hit;
+            //maybe make it where u can hold, or make it like sage wall, i like first idea better
+            if (!Physics.Raycast(headOb.transform.position, headOb.transform.forward, out hit, 300, PlayerLayer))
+            {
+                return;
+            }
+
+            raising = true;
+            Quaternion direction = Quaternion.FromToRotation(hit.transform.up, hit.normal);
+            CreateNewWall(hit.point, direction, hit.transform);
+        }
+        //if (inputs[7] && canC && !raising)
+        //{
+        //    RaycastHit hit;
+        //    //maybe make it where u can hold, or make it like sage wall, i like first idea better
+        //    if (!Physics.Raycast(headOb.transform.position, headOb.transform.forward, out hit, 300, PlayerLayer))
+        //    {
+        //        return;
+        //    }
+
+        //    raising = true;
+        //    Quaternion direction = Quaternion.FromToRotation(hit.transform.up, hit.normal);
+        //    CreateNewWall(hit.point, direction, hit.transform);
+        //    //raising
+        //}
+        //else if (inputs[7] && raising)
+        //{
+        //    //Raise Object 
+        //    Transform _parent = NetworkManager.EarthCScale[currCWall].transform.parent;
+        //    NetworkManager.EarthCScale[currCWall].transform.parent = null;
+        //    NetworkManager.EarthCScale[currCWall].transform.localScale += new Vector3(0f, raiseRate, 0f);
+        //    NetworkManager.EarthCScale[currCWall].transform.parent = _parent;
+        //    ServerSend.RaiseEarthWall(currCWall, NetworkManager.EarthCScale[currCWall].transform.lossyScale);
+        //}
+        //else if (raising)
+        //{
+        //    raising = false;
+        //    canC = false;
+        //    currCWall = 0;
+        //    timerC = setTimerC;
+        //}
+    }
+
+    public override void InteruptD()
+    {
+        if (!raising) return;
+        raising = false;
+        canC = false;
+        currCWall = 0;
+    }
+
+    public override void EAbility()
+    {
+        if (canE && !inEMode)
+        {
+            TryECast();
+        }
+        else if (inputs[5] && inEMode)
+        {
+            switch (eState)
+            {
+                case "CWall":
+                    cEarthGrabbed.rb.AddForce(headOb.transform.forward * (EForce + cEarthGrabbed.transform.localScale.y));
+                    cEarthGrabbed.rb.useGravity = true;
+                    Destroy(EConnectedOb);
+                    break;
+                case "RUlt":
+                    rEarthGrabbed.rb.AddForce(headOb.transform.forward * (EForce + rEarthGrabbed.transform.localScale.y) * 3);
+                    rEarthGrabbed.rb.useGravity = true;
+                    Destroy(EConnectedOb);
+                    break;
+            }
+            eState = "none";
+            canE = false;
+            inEMode = false;
+            canAuto = false;
+            timerAuto = 1;
+        }
+        else if (canE && inEMode)
+        {
+            float multiplier = 0f;
+            if (inputs[9]) multiplier += 1f;
+            if (inputs[10]) multiplier -= 1f;
+            EConnectedOb.transform.position = EConnectedOb.transform.position + EConnectedOb.transform.forward * multiplier;
+            MoveGravityWell();
         }
     }
 
@@ -418,6 +578,45 @@ public class EarthBenderPlayer : MonoBehaviour
         NetworkManager.UltEarth.Add(_atkId, curREarth);
         ServerSend.CreateProjectile(3, _atkId, _position, _rotation, false, 0);
     }
+
+    
+
+        //if (inputs[8] && canE && !inEMode)
+        //{
+        //    TryECast();
+        //}
+        //else if (inputs[5] && inEMode)
+        //{
+        //    //can use var
+        //    switch (eState)
+        //    {
+        //        case "CWall":
+        //            cEarthGrabbed.rb.AddForce(headOb.transform.forward * (EForce + cEarthGrabbed.transform.localScale.y));
+        //            cEarthGrabbed.rb.useGravity = true;
+        //            Destroy(EConnectedOb);
+        //            break;
+        //        case "RUlt":
+        //            rEarthGrabbed.rb.AddForce(headOb.transform.forward * (EForce + rEarthGrabbed.transform.localScale.y) * 3);
+        //            rEarthGrabbed.rb.useGravity = true;
+        //            Destroy(EConnectedOb);
+        //            break;
+        //    }
+        //    eState = "none";
+        //    canE = false;
+        //    inEMode = false;
+        //    canNormalAtk = false;
+        //    timerNorm = 1;
+        //    timerE = setTimerE;
+        //}
+        //else if (inputs[8] && canE && inEMode)
+        //{
+        //    float multiplier = 0f;
+        //    if (inputs[9]) multiplier += 1f;
+        //    if (inputs[10]) multiplier -= 1f;
+        //    EConnectedOb.transform.position = EConnectedOb.transform.position + EConnectedOb.transform.forward * multiplier;
+        //    MoveGravityWell();
+        //}
+    
 
     private void TryECast()
     {
@@ -579,27 +778,7 @@ public class EarthBenderPlayer : MonoBehaviour
         ServerSend.CreateProjectile(1, _atkId, spawnPos.position, currQEarthAtk.transform.rotation, false, 0);
     }
 
-    private void ShootNormalAttack()
-    {
-        NormalEarthAttack currentEarthAttack = Instantiate(NormalAttackGameOb, NormalAttackSpawn.position, headOb.transform.rotation).GetComponent<NormalEarthAttack>();
-        
-        currentEarthAttack.casterPlayer = player;
-        currentEarthAttack.GetComponent<Rigidbody>().AddForce(currentEarthAttack.transform.forward * normalAtkForce, ForceMode.Impulse);
-        int[] _keyArrayEarth = NetworkManager.NormalEarthAttacks.Keys.ToArray();
-        if (_keyArrayEarth.Length == 0)
-        {
-            currentEarthAttack.id = 0;
-            NetworkManager.NormalEarthAttacks.Add(0, currentEarthAttack);
-            ServerSend.CreateProjectile(0, 0, NormalAttackSpawn.position, currentEarthAttack.transform.rotation, false, 0);
-            return;
-        }
-        int _atkId = _keyArrayEarth.Max() + 1;// _keyArrayEarth[_keyArrayEarth.Length - 1] + 1;
-        currentEarthAttack.id = _atkId;
-        NetworkManager.NormalEarthAttacks.Add(_atkId, currentEarthAttack);
-        //Debug.Log($"Bruh: {NetworkManager.NormalEarthAttacks[_atkId].id}");
-        ServerSend.CreateProjectile(0, _atkId, NormalAttackSpawn.position, currentEarthAttack.transform.rotation, false, 0);
-    }
-
+    
     /// <summary>Calculates the player's desired movement direction and moves him.</summary>
     /// <param name="_inputDirection"></param>
     private void Move(Vector3 _inputDirection)
@@ -667,6 +846,7 @@ public class EarthBenderPlayer : MonoBehaviour
     }
     public void Respawn()
     {
+        
         //Debug.Log(new Vector3(NetworkManager.instance.RespawnPoint.position.x + Random.Range(-NetworkManager.instance.rangeRespawn, NetworkManager.instance.rangeRespawn), NetworkManager.instance.RespawnPoint.position.y, NetworkManager.instance.RespawnPoint.position.z + Random.Range(-NetworkManager.instance.rangeRespawn, NetworkManager.instance.rangeRespawn)));
         controller.enabled = false;
         controller.transform.position = new Vector3(NetworkManager.instance.RespawnPoint.position.x + Random.Range(-NetworkManager.instance.rangeRespawn, NetworkManager.instance.rangeRespawn), NetworkManager.instance.RespawnPoint.position.y, NetworkManager.instance.RespawnPoint.position.z + Random.Range(-NetworkManager.instance.rangeRespawn, NetworkManager.instance.rangeRespawn));
@@ -676,7 +856,7 @@ public class EarthBenderPlayer : MonoBehaviour
         ServerSend.UpdateHealth(player.id, player.curHp);
         timerC = setTimerC;
         timerE = setTimerE;
-        timerNorm = setTimerNorm;
+        timerAuto = setTimerNorm;
         timerR = setTimerR;
         timerQ = setTimerQ;
         for (int i = 0; i < QTotalAdd; i++)
@@ -686,7 +866,7 @@ public class EarthBenderPlayer : MonoBehaviour
             NetworkManager.InActionEarthQ[idQs[i]].pending = false;
             NetworkManager.InActionEarthQ[idQs[i]].rb.isKinematic = false;
         }
-        canNormalAtk = true;
+        canAuto = true;
         inQProc = false;
         canC = true;
         raising = false;
