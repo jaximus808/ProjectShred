@@ -96,16 +96,18 @@ public class EarthBenderPlayer : ClassConstructor
     {
         //idQs = new int[] { 0,0,0,0,0};
 
+        //could maybe make this a func idk should work tho
         setAuto = setTimerNorm;
         setQ = setTimerQ;
         setC = setTimerC;
         setE = setTimerE;
         setR = setR;
-
+        SetTimers();
         timerDash = setDashTimer;
         gravity *= Time.fixedDeltaTime * Time.fixedDeltaTime;
         moveSpeed *= Time.fixedDeltaTime;
         jumpSpeed *= Time.fixedDeltaTime;
+        
         UltimateSpawns.Add(0, new Dictionary<int, Vector3>());
         UltimateSpawns.Add(1, new Dictionary<int, Vector3>());
         UltimateSpawns.Add(2, new Dictionary<int, Vector3>());
@@ -204,171 +206,15 @@ public class EarthBenderPlayer : ClassConstructor
             }
         }
         Move(_inputDirection);
-        ServerSend.UpdateCoolDown(player.id,timerAuto,timerQ,timerC,timerE,timerR);
+        MainTimerCount();
+        ServerSend.UpdateCoolDown(player.id, (timerAuto == setAuto) ? 0 : timerAuto,(timerQ == setQ) ? 0: timerQ,(timerC == setC)? 0:timerC,(timerE == setE)? 0:timerE,(timerR == setR) ? 0:timerR);
         if (inRCharge) return;
-        // eing
 
         ApplyInput(new bool[5] { inputs[5], inputs[6], inputs[7], inputs[8], false});
-        MainTimerCount();
+        
         //testing parent
         return; 
-        if (inputs[8] && canE && !inEMode)
-        {
-            TryECast();
-        }
-        else if (inputs[5] && inEMode)
-        {
-            //can use var
-            switch (eState)
-            {
-                case "CWall":
-                    cEarthGrabbed.rb.AddForce(headOb.transform.forward * (EForce + cEarthGrabbed.transform.localScale.y));
-                    cEarthGrabbed.rb.useGravity = true;
-                    Destroy(EConnectedOb);
-                    break;
-                case "RUlt":
-                    rEarthGrabbed.rb.AddForce(headOb.transform.forward * (EForce + rEarthGrabbed.transform.localScale.y)*3);
-                    rEarthGrabbed.rb.useGravity = true;
-                    Destroy(EConnectedOb);
-                    break;
-            }
-            eState = "none";
-            canE = false;
-            inEMode = false;
-            canNormalAtk = false;
-            timerAuto = 1;
-            timerE = setTimerE;
-        }
-        else if (inputs[8] && canE && inEMode)
-        {
-            float multiplier = 0f;
-            if (inputs[9]) multiplier += 1f;
-            if (inputs[10]) multiplier -= 1f;
-            EConnectedOb.transform.position = EConnectedOb.transform.position + EConnectedOb.transform.forward * multiplier;
-            MoveGravityWell();
-        }
-
-        else if (canE && inEMode)
-        {
-            switch (eState)
-            {
-                case "CWall":
-                    cEarthGrabbed.rb.useGravity = true;
-                    break;
-                case "RUlt":
-                    rEarthGrabbed.rb.useGravity = true;
-                    break;
-            }
-            Destroy(EConnectedOb);
-            cEarthGrabbed = null;
-            canE = false;
-            inEMode = false;
-            timerE = setTimerE;
-
-        }
-        else if (!canE)
-        {
-            timerE -= Time.fixedDeltaTime;
-            if (timerE <= 0) { canE = true; }
-        }
-
-
-        if (canQ && inputs[6])
-        {
-            //canQ = false;
-
-            //ShootNormalAttack();
-            //shoot soemthing
-            inQProc = true;
-            if (timerQAdd <= 0)
-            {
-                if (QTotalAdd + 1 <= qAddCap)
-                {
-                    QTotalAdd++;
-                    //send to client of it adding or smth idk
-                    AddSpikesPend();
-                    Debug.Log("QADDED");
-                    timerQAdd = setTimerQAdd;
-                }
-
-            }
-            else
-            {
-                timerQAdd -= Time.fixedDeltaTime;
-            }
-
-        }
-        else if (canQ && inQProc)
-        {
-            canQ = false;
-            inQProc = false;
-            ShootQSpikes();
-            Debug.Log($"Shot {QTotalAdd} spikes");
-            QTotalAdd = 0;
-            timerQ = setTimerQ;
-        }
-        else if (!canQ)
-        {
-            timerQ -= Time.fixedDeltaTime;
-            if (timerQ <= 0)
-            {
-                canQ = true;
-            }
-        }
-        if (canAuto && inputs[5] && !inEMode)
-        {
-            canNormalAtk = false;
-            timerAuto = setTimerNorm;
-            AutoAbility();
-            //shoot soemthing
-        }
-        else if (!canAuto)
-        {
-            timerAuto -= Time.fixedDeltaTime;
-            if (timerAuto <= 0)
-            {
-                canAuto = true;
-            }
-        }
-        //prob make this logic nicer but should work
-        if (inputs[7] && canC && !raising)
-        {
-            RaycastHit hit;
-            //maybe make it where u can hold, or make it like sage wall, i like first idea better
-            if (!Physics.Raycast(headOb.transform.position, headOb.transform.forward, out hit, 300, PlayerLayer))
-            {
-                return;
-            }
-
-            raising = true;
-            Quaternion direction = Quaternion.FromToRotation(hit.transform.up, hit.normal);
-            CreateNewWall(hit.point, direction,hit.transform);
-            //raising
-        }
-        else if (inputs[7] && raising)
-        {
-            //Raise Object 
-            Transform _parent = NetworkManager.EarthCScale[currCWall].transform.parent;
-            NetworkManager.EarthCScale[currCWall].transform.parent = null;
-            NetworkManager.EarthCScale[currCWall].transform.localScale += new Vector3(0f, raiseRate, 0f);
-            NetworkManager.EarthCScale[currCWall].transform.parent = _parent;
-            ServerSend.RaiseEarthWall(currCWall, NetworkManager.EarthCScale[currCWall].transform.lossyScale);
-        }  
-        else if (raising)
-        {
-            raising = false;
-            canC = false;
-            currCWall = 0;
-            timerC = setTimerC;
-        }
-        if (!canC)
-        {
-            timerC -= Time.fixedDeltaTime;
-            if (timerC <= 0)
-            {
-                canC = true;
-            }
-        }
+        
     }
 
     public override void AutoAbility()
@@ -450,41 +296,12 @@ public class EarthBenderPlayer : ClassConstructor
             Quaternion direction = Quaternion.FromToRotation(hit.transform.up, hit.normal);
             CreateNewWall(hit.point, direction, hit.transform);
         }
-        //if (inputs[7] && canC && !raising)
-        //{
-        //    RaycastHit hit;
-        //    //maybe make it where u can hold, or make it like sage wall, i like first idea better
-        //    if (!Physics.Raycast(headOb.transform.position, headOb.transform.forward, out hit, 300, PlayerLayer))
-        //    {
-        //        return;
-        //    }
-
-        //    raising = true;
-        //    Quaternion direction = Quaternion.FromToRotation(hit.transform.up, hit.normal);
-        //    CreateNewWall(hit.point, direction, hit.transform);
-        //    //raising
-        //}
-        //else if (inputs[7] && raising)
-        //{
-        //    //Raise Object 
-        //    Transform _parent = NetworkManager.EarthCScale[currCWall].transform.parent;
-        //    NetworkManager.EarthCScale[currCWall].transform.parent = null;
-        //    NetworkManager.EarthCScale[currCWall].transform.localScale += new Vector3(0f, raiseRate, 0f);
-        //    NetworkManager.EarthCScale[currCWall].transform.parent = _parent;
-        //    ServerSend.RaiseEarthWall(currCWall, NetworkManager.EarthCScale[currCWall].transform.lossyScale);
-        //}
-        //else if (raising)
-        //{
-        //    raising = false;
-        //    canC = false;
-        //    currCWall = 0;
-        //    timerC = setTimerC;
-        //}
     }
 
     public override void InteruptD()
     {
-        if (!raising) return;
+        
+        if (!raising || (inputs[7] && raising)) return;
         raising = false;
         canC = false;
         currCWall = 0;
@@ -579,44 +396,6 @@ public class EarthBenderPlayer : ClassConstructor
         ServerSend.CreateProjectile(3, _atkId, _position, _rotation, false, 0);
     }
 
-    
-
-        //if (inputs[8] && canE && !inEMode)
-        //{
-        //    TryECast();
-        //}
-        //else if (inputs[5] && inEMode)
-        //{
-        //    //can use var
-        //    switch (eState)
-        //    {
-        //        case "CWall":
-        //            cEarthGrabbed.rb.AddForce(headOb.transform.forward * (EForce + cEarthGrabbed.transform.localScale.y));
-        //            cEarthGrabbed.rb.useGravity = true;
-        //            Destroy(EConnectedOb);
-        //            break;
-        //        case "RUlt":
-        //            rEarthGrabbed.rb.AddForce(headOb.transform.forward * (EForce + rEarthGrabbed.transform.localScale.y) * 3);
-        //            rEarthGrabbed.rb.useGravity = true;
-        //            Destroy(EConnectedOb);
-        //            break;
-        //    }
-        //    eState = "none";
-        //    canE = false;
-        //    inEMode = false;
-        //    canNormalAtk = false;
-        //    timerNorm = 1;
-        //    timerE = setTimerE;
-        //}
-        //else if (inputs[8] && canE && inEMode)
-        //{
-        //    float multiplier = 0f;
-        //    if (inputs[9]) multiplier += 1f;
-        //    if (inputs[10]) multiplier -= 1f;
-        //    EConnectedOb.transform.position = EConnectedOb.transform.position + EConnectedOb.transform.forward * multiplier;
-        //    MoveGravityWell();
-        //}
-    
 
     private void TryECast()
     {

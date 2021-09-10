@@ -22,6 +22,15 @@ public class ClassConstructor : MonoBehaviour
     protected float timerE = 0f; 
     protected float timerR = 0f;
 
+    public virtual void SetTimers()
+    {
+        timerAuto = setAuto;
+        timerQ = setQ;
+        timerC = setC;
+        timerE = setE; 
+        timerR = setR;
+    }
+
     public virtual void AutoAbility()
     {
 
